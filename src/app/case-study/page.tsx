@@ -1,675 +1,605 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
-const sections = [
-  { id: "summary", label: "Executive Summary" },
-  { id: "problem", label: "The Problem" },
-  { id: "hypothesis", label: "Hypothesis Formation" },
-  { id: "users", label: "Target Users" },
-  { id: "solution", label: "The Solution" },
-  { id: "flywheel", label: "The Growth Flywheel" },
-  { id: "metrics", label: "Success Metrics" },
-  { id: "roi", label: "ROI Analysis" },
-  { id: "architecture", label: "Technical Architecture" },
-  { id: "reflections", label: "Reflections" },
-];
+import { useEffect, useState } from "react";
+import {
+  TrendingUp,
+  Bell,
+  Zap,
+  Target,
+  AlertTriangle,
+  ChevronRight,
+  BarChart2,
+  Users,
+  DollarSign,
+  X,
+} from "lucide-react";
 
 export default function CaseStudyPage() {
-  const [activeSection, setActiveSection] = useState("summary");
+  const [animateIn, setAnimateIn] = useState(false);
+  const [openSection, setOpenSection] = useState<string | null>("why");
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      { rootMargin: "-20% 0px -70% 0px" }
-    );
-    sections.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
+    setTimeout(() => setAnimateIn(true), 100);
+    setOpenSection("why");
   }, []);
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#0a0f1a", color: "#e2e8f0" }}>
-      {/* Hero */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
-          borderBottom: "1px solid rgba(99,102,241,0.2)",
-          padding: "60px 24px 48px",
-        }}
-      >
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              background: "rgba(99,102,241,0.15)",
-              border: "1px solid rgba(99,102,241,0.4)",
-              borderRadius: 20,
-              padding: "6px 14px",
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: "0.08em",
-              color: "#a5b4fc",
-              marginBottom: 24,
-              textTransform: "uppercase",
-            }}
-          >
-            ⚡ PM Case Study
+    <div className="min-h-screen bg-gradient-to-b from-[#020b18] to-[#040f1f] py-12">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+
+        {/* Header */}
+        <div className={`mb-10 transition-all duration-700 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="h-1 w-6 rounded-full bg-blue-500" />
+            <span className="text-xs font-bold text-blue-400 uppercase tracking-widest">PM Framework</span>
           </div>
-          <h1
-            style={{
-              fontSize: "clamp(2rem, 5vw, 3.2rem)",
-              fontWeight: 800,
-              lineHeight: 1.15,
-              marginBottom: 16,
-              background: "linear-gradient(135deg, #e2e8f0 0%, #a5b4fc 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            StormGate: A Contextual Subscription Engine for The Weather Company
+          <h1 className="text-3xl font-bold text-white mb-3 leading-tight">
+            The Weather Moment Score:<br />
+            <span className="text-slate-400 font-normal">A Growth Framework for TWC&apos;s Web Consumer Platform</span>
           </h1>
-          <p style={{ fontSize: "1.1rem", color: "#94a3b8", maxWidth: 680, lineHeight: 1.7 }}>
-            A real-time weather intelligence layer that dynamically triggers paywalls at peak willingness-to-pay moments — replacing blanket monetization with precision growth.
+          <p className="text-slate-400 leading-relaxed max-w-2xl">
+            An analysis of how weather data signals can unlock three distinct revenue levers on weather.com — 
+            and a structured approach to experimenting across all three without destroying the advertising 
+            model that generates TWC&apos;s primary revenue.
           </p>
-          <div style={{ display: "flex", gap: 32, marginTop: 32, flexWrap: "wrap" }}>
-            {[
-              { label: "Role", value: "Associate PM Candidate" },
-              { label: "Company", value: "The Weather Company" },
-              { label: "Timeline", value: "10-Week Concept Sprint" },
-              { label: "Scope", value: "Paywall · AI · Growth" },
-            ].map(({ label, value }) => (
-              <div key={label}>
-                <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 3 }}>{label}</div>
-                <div style={{ fontSize: 15, color: "#cbd5e1", fontWeight: 600 }}>{value}</div>
-              </div>
+          <div className="flex flex-wrap gap-2 mt-4">
+            {["Growth Experimentation", "A/B Testing", "Advertising Model", "Premium Subscriptions", "Contextual Signals"].map((tag) => (
+              <span key={tag} className="px-2.5 py-1 rounded-full bg-white/5 border border-white/8 text-slate-400 text-xs">
+                {tag}
+              </span>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Body: Sidebar + Content */}
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 24px", display: "flex", gap: 48, alignItems: "flex-start" }}>
-        {/* Sticky Sidebar */}
+        {/* Exec Summary — the PM bet in 4 sentences */}
         <div
-          style={{
-            width: 200,
-            flexShrink: 0,
-            position: "sticky",
-            top: 80,
-            display: "flex",
-            flexDirection: "column",
-          }}
+          className={`glass rounded-2xl p-6 mb-6 border border-blue-500/20 transition-all duration-700 delay-100 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+          style={{ background: "rgba(0, 73, 144, 0.08)" }}
         >
-          <div style={{ fontSize: 10, color: "#475569", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>Contents</div>
-          {sections.map(({ id, label }) => (
-            <button
-              key={id}
-              onClick={() => scrollTo(id)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                textAlign: "left",
-                padding: "6px 10px",
-                borderRadius: 6,
-                fontSize: 13,
-                color: activeSection === id ? "#a5b4fc" : "#64748b",
-                fontWeight: activeSection === id ? 600 : 400,
-                borderLeft: `2px solid ${activeSection === id ? "#6366f1" : "transparent"}`,
-                transition: "all 0.2s",
-                marginBottom: 2,
-              }}
-            >
-              {label}
-            </button>
-          ))}
+          <div className="flex items-center gap-2 mb-3">
+            <div className="h-6 w-6 rounded-md bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
+              <Target className="h-3.5 w-3.5 text-blue-400" />
+            </div>
+            <span className="text-sm font-semibold text-blue-300">Executive Summary</span>
+            <span className="ml-auto text-xs text-slate-600">The bet in 4 sentences</span>
+          </div>
+          <div className="space-y-3 text-sm leading-relaxed">
+            <p className="text-slate-300">
+              <strong className="text-white">The opportunity:</strong> weather.com&apos;s 360M MAU generate enormous advertising inventory — 
+              but every session is currently treated identically at the growth layer, regardless of whether the user 
+              is casually checking tomorrow&apos;s forecast or actively tracking a hurricane approaching their home.
+            </p>
+            <p className="text-slate-300">
+              <strong className="text-white">The insight:</strong> Weather conditions are a real-time signal of user intent and emotional 
+              state that no advertising platform currently exploits. A user in an active storm has 3–5× higher session 
+              dwell time, 4× higher alert opt-in rate, and meaningfully higher willingness-to-pay for premium features — 
+              but only for minutes, not days.
+            </p>
+            <p className="text-slate-300">
+              <strong className="text-white">The framework:</strong> A <strong className="text-blue-300">Weather Moment Score (WMS)</strong> — 
+              a composite signal combining WMO severity code, predicted session dwell trajectory, and geographic exposure 
+              rate — routes each session to the growth lever (advertising format, engagement, or premium) that maximizes 
+              revenue per visit without creating inter-lever conflicts.
+            </p>
+            <p className="text-slate-400">
+              <strong className="text-slate-300">The constraint acknowledged:</strong> Subscription conversions and advertising impressions 
+              can conflict. This framework is explicitly designed to complement TWC&apos;s ad-first model — not replace it. 
+              EXP-C (premium upsell) is only activated at WMS ≥ 65, where the estimated subscription LTV exceeds the CPM 
+              value of an incremental ad impression.
+            </p>
+          </div>
         </div>
 
-        {/* Main Content */}
-        <div style={{ flex: 1, maxWidth: 800 }}>
-
-          {/* Executive Summary */}
-          <Section id="summary" title="Executive Summary" icon="📋">
-            <Callout color="#6366f1">
-              TWC&apos;s core consumer revenue model is <strong style={{ color: "#e2e8f0" }}>advertising-first</strong> — weather.com serves 360M monthly free users, monetized through contextual ad placements. StormGate tests whether a <strong style={{ color: "#e2e8f0" }}>premium subscription layer</strong> can complement that model by converting the highest-intent users during weather moments when ad revenue alone undersells the platform&apos;s value.
-            </Callout>
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginTop: 16 }}>
-              The core hypothesis: severe weather events create acute, time-sensitive demand for precision forecasts that free ad-supported content cannot satisfy. A contextual paywall — one that reads real-time conditions and adjusts its copy, timing, and offer framing to match the user&apos;s exact situation — can capture this demand without cannibalizing the free-tier engagement that drives advertising impressions.
+        {/* The problem */}
+        <SectionCard
+          id="why"
+          open={openSection}
+          toggle={setOpenSection}
+          delay="delay-150"
+          animateIn={animateIn}
+          icon={AlertTriangle}
+          iconColor="#f59e0b"
+          label="The Problem"
+          title="A context-blind growth surface"
+        >
+          <div className="space-y-4">
+            <p className="text-slate-400 text-sm leading-relaxed">
+              weather.com serves weather data to ~360M monthly users. The growth team&apos;s mandate is to increase 
+              revenue per visit (RPV) — the primary metric that captures both ad quality and premium conversion 
+              in a single measurement.
             </p>
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginTop: 12 }}>
-              This is not a replacement for TWC&apos;s advertising business. It&apos;s a <strong style={{ color: "#e2e8f0" }}>complementary revenue layer</strong> that activates only when contextual signals indicate the user&apos;s willingness-to-pay meaningfully exceeds the CPM value of showing them another ad. The result: estimated +18–32% paywall conversion during high-severity events, with zero impact on free-tier ad inventory for low-intent sessions.
-            </p>
-          </Section>
-
-          {/* The Problem */}
-          <Section id="problem" title="The Problem" icon="🎯">
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 24 }}>
-              The Weather Company&apos;s premium subscription model faces a structural monetization problem that compounds over time.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <ProblemCard
-                num="01"
-                title="Context-Blind Paywalls"
-                body="The same subscription CTA fires on a sunny Tuesday as it does during a tropical storm. This trains users to ignore it — pavlovian desensitization that permanently degrades paywall effectiveness."
-              />
-              <ProblemCard
-                num="02"
-                title="Missed Peak Willingness-to-Pay"
-                body="Severe weather events create acute, genuine demand for premium forecasts. A user tracking a hurricane has 10× the intent to convert vs. a baseline user. Current systems don't capture this signal."
-              />
-              <ProblemCard
-                num="03"
-                title="Over-Monetization Reputation Risk"
-                body="Industry reporting (The Information, 2024) documents user sentiment that TWC 'shows too many paywalls.' This threatens the 360M MAU base that drives advertising revenue — the core business."
-              />
-              <ProblemCard
-                num="04"
-                title="Static Copy in a Dynamic World"
-                body="Weather is inherently contextual. 'Unlock Premium Forecasts' is the same message for a user in a blizzard and a user checking if it&apos;ll rain at a wedding. Generic copy is a growth ceiling."
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <StatBox label="Monthly Active Users" value="360M" color="#3b82f6" sub="weather.com + wunderground.com" />
+              <StatBox label="Primary Revenue" value="Advertising" color="#f59e0b" sub="CPM-based, weather-contextual" />
+              <StatBox label="Data Accuracy" value="4× better" color="#10b981" sub="vs. competitors globally" />
             </div>
-          </Section>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              The current growth surface treats all sessions equally: the same paywall prompt, the same ad density, 
+              the same push notification ask — regardless of whether you&apos;re idly scrolling on a sunny Tuesday 
+              or frantically refreshing during a tornado warning. This is a significant missed signal.
+            </p>
+            <div className="glass rounded-xl p-4 border border-amber-500/15">
+              <div className="text-xs font-semibold text-amber-400 mb-2">The Missed Signal</div>
+              <div className="grid grid-cols-2 gap-3 text-xs text-slate-400">
+                <div>
+                  <div className="text-slate-300 font-medium mb-1">Low-severity session (WMS &lt; 35)</div>
+                  <ul className="space-y-1 text-slate-500">
+                    <li>• Avg session: 45 seconds</li>
+                    <li>• Paywall CVR: 0.3–0.8%</li>
+                    <li>• Push opt-in: ~4%</li>
+                    <li>• Best lever: ad format quality</li>
+                  </ul>
+                </div>
+                <div>
+                  <div className="text-slate-300 font-medium mb-1">High-severity session (WMS ≥ 65)</div>
+                  <ul className="space-y-1 text-slate-500">
+                    <li>• Avg session: 4–7 minutes</li>
+                    <li>• Paywall CVR: 2–4% (estimated)</li>
+                    <li>• Push opt-in: ~18%</li>
+                    <li>• Best lever: contextual upsell</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SectionCard>
 
-          {/* Hypothesis Formation — NEW SECTION */}
-          <Section id="hypothesis" title="Hypothesis Formation" icon="🔬">
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 24 }}>
-              In practice, this experiment would require close collaboration between the APM and TWC&apos;s web data scientist before a single line of code is written. Here&apos;s how that process would unfold.
+        {/* The WMS framework */}
+        <SectionCard
+          id="wms"
+          open={openSection}
+          toggle={setOpenSection}
+          delay="delay-200"
+          animateIn={animateIn}
+          icon={BarChart2}
+          iconColor="#8b5cf6"
+          label="The Framework"
+          title="Weather Moment Score (WMS)"
+        >
+          <div className="space-y-4">
+            <p className="text-slate-400 text-sm leading-relaxed">
+              WMS is a session-level composite signal — not a user-level model. It&apos;s intentionally stateless 
+              (no PII required) and computable at the edge in under 5ms, making it compatible with TWC&apos;s 
+              privacy-forward infrastructure and the open web.
             </p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24 }}>
-              <HypothesisStep
-                num="01"
-                role="PM"
-                roleColor="#6366f1"
-                title="Identify the Signal"
-                body="Starting from session-level analytics on weather.com, I&apos;d filter for sessions where users visited the radar or severe weather alert pages — a proxy for high-intent weather consumption. Hypothesis: these sessions have meaningfully different conversion rates, and we&apos;re not capturing them."
-              />
-              <HypothesisStep
-                num="02"
-                role="Data Scientist"
-                roleColor="#8b5cf6"
-                title="Validate the Signal in Historical Data"
-                body="The data science partner would pull 90 days of historical session data segmented by WMO weather code and wind speed at session time. The question: does paywall CVR correlate with weather severity? If severe sessions already convert at 3–4% vs. 1.5% for clear sessions, the hypothesis has prior evidence."
-              />
-              <HypothesisStep
-                num="03"
-                role="PM + DS"
-                roleColor="#10b981"
-                title="Define the Threshold and Guardrails Together"
-                body="We&apos;d jointly define what counts as &apos;severe enough&apos; to trigger the contextual variant: wind speed &gt;35 mph OR precipitation probability &gt;70% OR WMO code ≥ 61 (rain/snow/storm codes). We&apos;d also agree on guardrail metrics before launch: paywall dismissal rate must not increase &gt;5%, and session abandonment must stay flat."
-              />
-              <HypothesisStep
-                num="04"
-                role="PM"
-                roleColor="#6366f1"
-                title="Write the Formal Hypothesis"
-                body='&quot;For sessions where WMO weather severity ≥ &apos;Moderate&apos; (as defined by our joint threshold), showing contextual paywall copy that names the user&apos;s exact conditions will increase free trial start rate by ≥1.5 percentage points vs. the generic control, within 14 days, at 95% statistical significance.&quot;'
-              />
+            {/* Formula breakdown */}
+            <div className="glass rounded-xl p-4 border border-purple-500/15">
+              <div className="text-xs font-semibold text-purple-400 mb-3">WMS Formula (Proposed)</div>
+              <div className="font-mono text-xs text-center py-3 px-4 rounded-lg bg-purple-500/5 border border-purple-500/15 text-purple-300 mb-3">
+                WMS = (Severity Index × 0.55) + (Dwell Trajectory × 0.25) + (Geo Exposure Rate × 0.20)
+              </div>
+              <div className="grid grid-cols-3 gap-3 text-[11px]">
+                <div>
+                  <div className="text-slate-300 font-semibold mb-1">Severity Index (55%)</div>
+                  <div className="text-slate-500">WMO code → 5-level classification: clear→mild→moderate→severe→extreme</div>
+                </div>
+                <div>
+                  <div className="text-slate-300 font-semibold mb-1">Dwell Trajectory (25%)</div>
+                  <div className="text-slate-500">Page-load frequency in session. Rapid refreshes signal active monitoring behavior.</div>
+                </div>
+                <div>
+                  <div className="text-slate-300 font-semibold mb-1">Geo Exposure Rate (20%)</div>
+                  <div className="text-slate-500">% of local population under the same conditions. High = community-level event = amplified intent.</div>
+                </div>
+              </div>
             </div>
 
-            <Callout color="#8b5cf6">
-              <strong>Why this process matters:</strong> The hypothesis threshold (≥ Moderate severity) directly shapes the experiment&apos;s reach and statistical power. A threshold that&apos;s too narrow (Extreme only) gets insufficient traffic to reach significance. Too broad (any weather) dilutes the effect. Getting this right requires the data scientist&apos;s knowledge of session volume by severity band — not just PM instinct.
-            </Callout>
-          </Section>
+            {/* WMS → lever routing */}
+            <div className="space-y-2">
+              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">WMS → Growth Lever Routing</div>
+              {[
+                { range: "0–34", label: "Low WMS", lever: "EXP-A: Optimize ad format for impression quality", bg: "#3b82f6", logic: "Subscription friction creates churn risk greater than conversion upside at this WMS." },
+                { range: "35–64", label: "Mid WMS", lever: "EXP-B: Contextual push notification opt-in", bg: "#10b981", logic: "Convert current engagement into a return visit. Each daily user = ~12 more ad impressions." },
+                { range: "65–100", label: "High WMS", lever: "EXP-C: Severity-gated premium upsell", bg: "#8b5cf6", logic: "Session value peaks. User&apos;s need for advanced data exceeds the marginal CPM of one more ad." },
+              ].map((row) => (
+                <div key={row.range} className="glass rounded-xl p-3 flex items-start gap-3 border border-white/6">
+                  <div
+                    className="min-w-[44px] text-center py-1 rounded-lg font-mono text-xs font-bold"
+                    style={{ background: `${row.bg}15`, color: row.bg, border: `1px solid ${row.bg}30` }}
+                  >
+                    {row.range}
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-xs font-semibold text-white mb-0.5">{row.lever}</div>
+                    <div className="text-xs text-slate-500">{row.logic}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-          {/* Target Users */}
-          <Section id="users" title="Target Users" icon="👤">
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 24 }}>
-              StormGate was designed around three primary user archetypes with distinct weather-to-subscription conversion dynamics.
+            {/* Hypothesis formation — this is the JD's "partner with data scientist" signal */}
+            <div className="glass rounded-xl p-4 border border-blue-500/12">
+              <div className="text-xs font-semibold text-blue-400 mb-3">Hypothesis Formation — PM × Data Scientist Collaboration</div>
+              <div className="space-y-2">
+                <HypothesisStep
+                  num="01"
+                  role="PM"
+                  roleColor="#3b82f6"
+                  title="Identify the behavioral signal"
+                  body="Observation: Users in high-severity sessions exhibit qualitatively different behavior — multi-tab refreshing, direct map access, longer time-on-page. Hypothesis: This behavioral shift correlates with elevated purchase intent."
+                />
+                <HypothesisStep
+                  num="02"
+                  role="DS"
+                  roleColor="#10b981"
+                  title="Validate and quantify the signal"
+                  body="Data scientist runs cohort analysis on historical session data segmented by WMO severity. Confirms: session duration (+340% during severe events), bounce rate (−60%), and push opt-in rate (+350%) all correlate significantly with severity index."
+                />
+                <HypothesisStep
+                  num="03"
+                  role="PM + DS"
+                  roleColor="#8b5cf6"
+                  title="Define thresholds and guardrails"
+                  body="Joint decision: WMS ≥ 65 (roughly WMO code ≥ 61 + wind ≥ 35 mph) chosen as activation threshold. Guardrail: paywall dismissal rate must not exceed +5pp above baseline — exceeding this indicates friction overwhelming intent signal."
+                />
+                <HypothesisStep
+                  num="04"
+                  role="PM"
+                  roleColor="#3b82f6"
+                  title="Write the formal hypothesis"
+                  body="For sessions where WMS ≥ 65: contextual paywall copy naming the user's exact conditions will increase free trial start rate by ≥1.5 percentage points vs. generic control, within 14 days at 95% statistical significance, while keeping ad session revenue impact at ≤3%."
+                />
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+
+        {/* Three experiments */}
+        <SectionCard
+          id="experiments"
+          open={openSection}
+          toggle={setOpenSection}
+          delay="delay-250"
+          animateIn={animateIn}
+          icon={Zap}
+          iconColor="#f59e0b"
+          label="Three Experiments"
+          title="Testing all three revenue levers"
+        >
+          <div className="space-y-4">
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Rather than a single A/B test, this framework proposes three sequential experiments — each targeting 
+              a different revenue lever. They are designed to run non-overlapping user cohorts to prevent 
+              interference effects.
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
-              <UserCard
-                initials="SM"
-                color="#ef4444"
-                name="Storm Tracker"
-                role="Hurricane coast resident, amateur meteorologist"
-                pains={["Needs hour-by-hour storm track accuracy", "Can't find reliable 72-hour cone projections", "Current free tier cuts off at 3-day forecasts"]}
-                jtbd="When severe weather threatens my area, I want certainty so I can make evacuation decisions confidently."
+            <ExperimentCard
+              id="A"
+              icon={TrendingUp}
+              color="#3b82f6"
+              title="EXP-A: Weather-triggered ad format switching"
+              hypothesis="During high-severity weather sessions, switching from banner to interstitial ad format will increase revenue per visit by ≥8% without increasing bounce rate."
+              metric="Primary: RPV · Guardrail: Bounce rate (must not increase >3pp)"
+              status="proposed"
+              rationale="Ad revenue is TWC's primary income stream. Optimizing format for peak engagement sessions is the lowest-risk, highest-leverage starting point — no new product surface required."
+              scale="~18M US users exposed in 72 hrs at 50% rollout"
+            />
+            <ExperimentCard
+              id="B"
+              icon={Bell}
+              color="#10b981"
+              title="EXP-B: Contextual push notification opt-in"
+              hypothesis="Showing a contextual push opt-in ('Get alerted when the storm reaches your block') during moderate-severity sessions will increase D7 return visit rate by ≥12%."
+              metric="Primary: D7 return visit rate · Guardrail: Opt-in rate (must reach ≥8% before scaling)"
+              status="proposed"
+              rationale="Each daily active user created through EXP-B generates ~12 additional ad impressions before any premium consideration. Engagement compounds the ad model rather than competing with it."
+              scale="~14M US users in moderate+ conditions on any given day"
+            />
+            <ExperimentCard
+              id="C"
+              icon={Zap}
+              color="#8b5cf6"
+              title="EXP-C: Severity-gated contextual premium upsell"
+              hypothesis="For WMS ≥ 65 sessions: contextual copy naming the user's exact conditions will increase free trial start rate by ≥1.5pp vs. generic control at 95% significance, within 14 days."
+              metric="Primary: Free trial CVR · Secondary: 30-day trial retention · Guardrail: Ad session revenue impact ≤3%"
+              status="active"
+              rationale="Only runs at high WMS where estimated subscription LTV > CPM value of the forgone ad impression. Designed as an insurance policy for ad model, not a replacement."
+              scale="~7.5M users at WMS ≥ 65 in 72 hrs at 50% rollout"
+              isActive
+            />
+          </div>
+        </SectionCard>
+
+        {/* What I would NOT build */}
+        <SectionCard
+          id="not-build"
+          open={openSection}
+          toggle={setOpenSection}
+          delay="delay-300"
+          animateIn={animateIn}
+          icon={X}
+          iconColor="#ef4444"
+          label="Prioritization"
+          title="What I explicitly would not build (and why)"
+        >
+          <div className="space-y-3">
+            <p className="text-slate-400 text-sm leading-relaxed">
+              The strongest PM signal isn&apos;t knowing what to build — it&apos;s knowing what to cut. 
+              Three deprioritizations that were tempting but wrong for this context:
+            </p>
+            <NotBuildCard
+              title="Aggressive paywall frequency increase"
+              reason="The obvious move for a PM told to 'grow subscription revenue' — but wrong. At TWC's scale, a 10% paywall frequency increase creates millions of friction events. Without high WMS gating, conversion rates stay low and user trust erodes faster than LTV accumulates. Short-term CVR lift, long-term engagement decline."
+            />
+            <NotBuildCard
+              title="App-download conversion as a growth surface"
+              reason="A separate team's mandate. Optimizing app downloads on web surfaces creates misaligned incentives — web RPV drops when users migrate to the app, even if the app generates more revenue. The Web Consumer Platform team's mandate is clear: grow web RPV. Stay in the lane."
+            />
+            <NotBuildCard
+              title="ML-based personalization model (v1)"
+              reason="Tempting given TWC's data moat, but premature. A rule-based WMS classifier using existing WMO codes and session signals gets us 80% of the impact at 10% of the data infrastructure cost. Build the experimentation results first — then train a model on them. Rule-based → data collection → ML is the right sequence."
+            />
+          </div>
+        </SectionCard>
+
+        {/* ROI model */}
+        <SectionCard
+          id="roi"
+          open={openSection}
+          toggle={setOpenSection}
+          delay="delay-350"
+          animateIn={animateIn}
+          icon={DollarSign}
+          iconColor="#22c55e"
+          label="Business Case"
+          title="Conservative ROI estimate"
+        >
+          <div className="space-y-4">
+            <p className="text-xs text-slate-500 italic">
+              All figures are illustrative estimates for PM portfolio purposes. Not based on TWC internal data.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <ROICard
+                exp="EXP-A"
+                lever="Ad Format"
+                color="#3b82f6"
+                assumption="50M US users/month. 30% in moderate+ conditions. +8% RPV on affected sessions."
+                estimate="+$3–6M ARR incremental ad revenue"
+                risk="Low"
               />
-              <UserCard
-                initials="OC"
-                color="#f59e0b"
-                name="Outdoor Commuter"
-                role="Cyclist, runner — weather affects daily decisions"
-                pains={["Doesn't want premium during clear stretches", "Free tier is sufficient 80% of the time", "Converts only when caught off-guard by weather"]}
-                jtbd="When I'm planning routes, I want precision so I can avoid getting soaked or canceling unnecessarily."
-              />
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-              <UserCard
-                initials="EP"
-                color="#6366f1"
-                name="Event Planner"
-                role="Wedding, outdoor festival, sports coordinator"
-                pains={["Weekend-only high-stakes weather need", "Doesn't value daily premium subscription", "One bad forecast = significant real-world loss"]}
-                jtbd="When I'm coordinating outdoor events, I want a detailed 10-day forecast so I can communicate confidently with clients."
-              />
-              <UserCard
-                initials="FW"
+              <ROICard
+                exp="EXP-B"
+                lever="Engagement"
                 color="#10b981"
-                name="Frequency Weather Watcher"
-                role="Daily active user — checks 3–5x per day"
-                pains={["Already engaged but non-converting", "Paywall friction creates frustration not conversion", "Would pay for ad-free + extended data bundle"]}
-                jtbd="I want seamless access without ads so the product feels premium, not like a bait-and-switch."
+                assumption="14M moderate+ sessions/day. 8% push opt-in. 40% opt-in → D7 return. 12 ad impressions per return visit/year."
+                estimate="+$8–15M ARR in compounding ad inventory"
+                risk="Low–Med"
               />
-            </div>
-          </Section>
-
-          {/* The Solution */}
-          <Section id="solution" title="The Solution" icon="⚡">
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 24 }}>
-              Three deliberate design decisions differentiate StormGate from a conventional paywall system.
-            </p>
-
-            <EpicCard
-              num="01"
-              title="Severity-Adaptive Engine"
-              body="A classification pipeline maps WMO weather codes + wind speed + precipitation rate to a 5-level severity index (Clear → Mild → Moderate → Severe → Extreme). Each severity level unlocks a distinct paywall variant — from lifestyle framing ('Plan your weekend precisely') to safety-urgency framing ('Exact evacuation timing — updated every 6 minutes')."
-              insight="Higher severity = higher conversion probability = show paywall sooner in the session, not later."
-              badge="Core Logic"
-              badgeColor="#6366f1"
-            />
-
-            <EpicCard
-              num="02"
-              title="AI-Powered Contextual Copy"
-              body="OpenRouter/Claude generates real-time paywall copy seeded with the user's exact conditions: location, WMO code, temperature, wind speed, and time of day. The copy is never generic. A user in a coastal storm sees 'Storm surge timing is a Premium forecast. See the exact hour it peaks.' A clear-day user sees 'Plan this weekend with an hour-by-hour precision forecast.'"
-              insight="Copy that names the user's exact situation converts 2–4× better than generic urgency copy."
-              badge="AI Layer"
-              badgeColor="#8b5cf6"
-            />
-
-            <EpicCard
-              num="03"
-              title="A/B Experiment Framework"
-              body="A built-in experiment simulator lets PMs run Control (generic paywall) vs. Contextual (severity-adaptive) comparisons. The framework tracks conversion rate, session depth before trigger, and segment-level lift. This isn't a demo artifact — it's a prototype of the PM tooling that would operate StormGate in production."
-              insight="Experiments must be observable and reversible. The dashboard makes both possible without engineering tickets."
-              badge="PM Tooling"
-              badgeColor="#10b981"
-            />
-          </Section>
-
-          {/* Flywheel */}
-          <Section id="flywheel" title="The Growth Flywheel" icon="🔄">
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 24 }}>
-              StormGate&apos;s core insight is that contextual conversion creates a reinforcing loop — better data makes better targeting, which drives better conversion, which funds better forecasting, which attracts more users.
-            </p>
-            <div style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: 12, padding: 24, marginBottom: 24 }}>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 0, justifyContent: "center", alignItems: "center" }}>
-                {[
-                  { icon: "🌩️", label: "Severe Weather Event" },
-                  { icon: "🎯", label: "Contextual Paywall Fires" },
-                  { icon: "💳", label: "User Converts" },
-                  { icon: "📊", label: "Behavioral Data Collected" },
-                  { icon: "🤖", label: "Engine Learns Segment" },
-                  { icon: "📈", label: "Next Event Converts Higher" },
-                ].map(({ icon, label }, i, arr) => (
-                  <div key={label} style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ textAlign: "center", padding: "8px 12px" }}>
-                      <div style={{ fontSize: 24, marginBottom: 4 }}>{icon}</div>
-                      <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 500, maxWidth: 80, lineHeight: 1.3 }}>{label}</div>
-                    </div>
-                    {i < arr.length - 1 && <div style={{ color: "#6366f1", fontSize: 18, padding: "0 4px" }}>→</div>}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <p style={{ color: "#94a3b8", lineHeight: 1.8 }}>
-              Critically, this flywheel <strong style={{ color: "#e2e8f0" }}>doesn&apos;t increase total paywall frequency</strong> — it improves timing precision. Users who convert during a severe-weather session churn at lower rates because the premium product proved its value at the exact moment they needed it most. This is the behavioral economics insight at the core of StormGate: urgency-driven conversions create high-LTV subscribers, not just trials.
-            </p>
-          </Section>
-
-          {/* Success Metrics */}
-          <Section id="metrics" title="Success Metrics" icon="📊">
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 24 }}>
-              Three categories of metrics define success. These were chosen to be measurable at week 2, week 8, and week 24 without requiring data infrastructure beyond standard analytics tooling.
-            </p>
-            <div style={{ marginBottom: 20 }}>
-              <MetricLabel>Conversion Metrics</MetricLabel>
-              <MetricTable rows={[
-                ["Paywall CVR (Severe Events)", "Baseline ~3.2%", "5.5%+", "Experiment cohort A/B, event-segmented"],
-                ["Paywall CVR (Moderate Events)", "Baseline ~1.8%", "2.8%+", "Same cohort, different severity bucket"],
-                ["Subscription Start Rate", "Baseline", "+20% lift", "Not tied to specific severity"],
-              ]} />
-            </div>
-            <div style={{ marginBottom: 20 }}>
-              <MetricLabel>Retention Metrics</MetricLabel>
-              <MetricTable rows={[
-                ["30-day Sub Retention (Weather-triggered)", "Industry avg 61%", "70%+", "Segment: converted during severe event"],
-                ["Trial-to-Paid Rate", "Baseline", "Target +8pts", "StormGate cohort vs. organic sign-ups"],
-              ]} />
-            </div>
-            <div style={{ marginBottom: 20 }}>
-              <MetricLabel>Health Metrics (Guard Rails)</MetricLabel>
-              <MetricTable rows={[
-                ["Paywall Dismissal Rate", "Existing rate", "No increase", "Alert if contextual paywall dismissed more than control"],
-                ["App Session Abandonment", "Baseline rate", "No increase", "Ensures paywall timing isn&apos;t causing churn"],
-                ["5-Star App Store Reviews", "Current average", "Maintain or improve", "Secondary signal for user trust"],
-              ]} />
-            </div>
-          </Section>
-
-          {/* ROI */}
-          <Section id="roi" title="ROI Analysis" icon="💰">
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 24 }}>
-              A conservative bottom-up model using publicly available TWC data and industry subscription benchmarks.
-            </p>
-            <div style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 12, padding: 24, marginBottom: 24 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
-                {[
-                  { label: "MAU Eligible for StormGate", value: "~72M", note: "20% of 360M in moderate+ weather markets" },
-                  { label: "Severe Event Days/Year", value: "~45 days", note: "Avg severe weather exposure per eligible MAU" },
-                  { label: "Incremental CVR Lift", value: "+2.3 pts", note: "Conservative mid-point of modeled range" },
-                  { label: "Avg Sub Price", value: "$3.99/mo", note: "TWC Premium monthly price" },
-                  { label: "12-Month Incremental Subs", value: "~745K", note: "72M × 45/365 × 2.3% lift vs. baseline 3.2%" },
-                  { label: "Gross Annual Revenue Lift", value: "$35.7M", note: "At $3.99/mo × 745K × 12-month LTV factor" },
-                ].map(({ label, value, note }) => (
-                  <div key={label}>
-                    <div style={{ fontSize: 22, fontWeight: 800, color: "#10b981" }}>{value}</div>
-                    <div style={{ fontSize: 13, color: "#e2e8f0", fontWeight: 600, marginTop: 2 }}>{label}</div>
-                    <div style={{ fontSize: 11, color: "#64748b", marginTop: 4, lineHeight: 1.4 }}>{note}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <Callout color="#10b981">
-              <strong>Key assumption check:</strong> This model assumes 30-day retention on weather-triggered subs is 68% (vs. 61% industry avg). If retention is baseline, revenue lift is still ~$21M — still a strong ROI against estimated 2-engineer, 1-PM, 12-week build cost.
-            </Callout>
-          </Section>
-
-          {/* Architecture */}
-          <Section id="architecture" title="Technical Architecture" icon="🏗️">
-            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 24 }}>
-              StormGate is architected for edge performance — paywall decisions must happen in &lt;100ms to be invisible to users. The system has three layers.
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24 }}>
-              <ArchLayer
-                title="Edge Data Layer"
-                detail="Vercel Edge Functions fetch weather data (Open-Meteo in demo; TWC Weather Data APIs in production) and run severity classification. This layer executes in &lt;40ms globally."
-                color="#6366f1"
-                note="Production note: TWC's own enterprise Weather Data APIs would replace Open-Meteo, eliminating third-party dependency and enabling proprietary signal enrichment."
-              />
-              <ArchLayer
-                title="AI Copy Layer"
-                detail="OpenRouter (Claude) generates contextual paywall copy seeded with exact conditions. A rule-based fallback fires if LLM latency exceeds 800ms threshold — ensuring paywall always shows, never hangs."
+              <ROICard
+                exp="EXP-C"
+                lever="Premium"
                 color="#8b5cf6"
-                note="Design decision: Rule-based fallback is not a compromise — it's a deliberate reliability pattern. 95th percentile LLM calls take <200ms on Claude Haiku."
-              />
-              <ArchLayer
-                title="Experiment Layer"
-                detail="Control vs. Contextual variants are assigned at session start via cookie. The PM dashboard surfaces cohort-level conversion rates, session depth, and severity-segment breakdown in real time."
-                color="#10b981"
-                note="This is the layer most production PM tools lack — the paywall experiment framework. StormGate makes it first-class, not an afterthought."
+                assumption="7.5M high-WMS sessions in 72 hrs. 1.5pp CVR lift. $5/mo avg. 40% trial-to-paid."
+                estimate="+$2–4M ARR new subscription revenue"
+                risk="Med"
               />
             </div>
-          </Section>
+            <div className="glass rounded-xl p-3 border border-green-500/15">
+              <div className="text-xs text-green-400 font-semibold mb-1">Bottom-Up: Combined Three-Lever Opportunity</div>
+              <div className="text-white font-bold text-lg">$13–25M ARR incremental</div>
+              <div className="text-slate-500 text-xs mt-0.5">Conservative. Assumes no cannibalization between levers (WMS routing logic prevents this). Assumes no change to ad CPM baseline.</div>
+            </div>
+          </div>
+        </SectionCard>
 
-          {/* Reflections */}
-          <Section id="reflections" title="Reflections" icon="💬">
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Reflections */}
+        <SectionCard
+          id="reflect"
+          open={openSection}
+          toggle={setOpenSection}
+          delay="delay-400"
+          animateIn={animateIn}
+          icon={Users}
+          iconColor="#38bdf8"
+          label="If I Were on the Team"
+          title="Day 1 priorities and honest gaps"
+        >
+          <div className="space-y-3">
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Portfolio projects are hypotheses about product thinking. Here&apos;s what I&apos;d do if this became a real work project, 
+              and where this analysis has genuine gaps I haven&apos;t resolved.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <ReflectionCard
-                title="What I'd Do Differently"
-                body="The demo uses a rule-based severity engine that maps WMO codes directly to paywall variants. In production, I'd train a lightweight ML classifier on historical conversion data to find non-obvious signals — time of day × weather code combinations, or geographic patterns (coastal users respond differently to hurricane watches than inland users 200 miles away)."
+                title="First 30 days"
+                body="Shadow the web data scientist to understand which session signals are actually instrumented — my WMS formula assumes dwell trajectory is trackable, and that assumption needs to be validated against real analytics infrastructure."
               />
               <ReflectionCard
-                title="The Biggest Risk"
-                body="Severe weather creates emotional states that are ethically complex to optimize against. A user tracking a hurricane is scared, not just a 'high-intent subscriber.' StormGate's paywall copy is designed to be genuinely useful (safety features, evacuation timing) rather than urgency-exploitative. Getting this tone right requires qualitative research with users in affected zones — not just CVR optimization."
+                title="The qualitative gap"
+                body="WMS is a quantitative construct. I'd want 10+ user interviews from people who checked weather during a severe event — to understand what they actually wanted that they didn't get — before running EXP-C at scale."
               />
               <ReflectionCard
-                title="What Would Make This Real"
-                body="Three inputs would transform this prototype into a shippable product: (1) TWC's historical paywall impression + conversion data segmented by weather condition, (2) a qualitative study with 10–15 users who've experienced weather emergencies, and (3) legal review on using location + weather severity as conversion signals in GDPR/CCPA frameworks."
+                title="EXP-A is the real starting point"
+                body="Start with ad format switching — lowest risk, doesn't require a new product surface, and builds the experimentation infrastructure that EXP-B and EXP-C will depend on. Don't start with a paywall."
               />
               <ReflectionCard
-                title="Why This Problem, Why Now"
-                body="The Weather Company sits at a rare intersection: massive reach (360M MAU), deeply personal product category (weather affects real decisions), and an undermonetized premium tier. The contextual paywall opportunity is time-sensitive because subscription fatigue is increasing across all digital products — the window for precision paywall experiences is narrowing. Doing this well now creates a durable competitive moat."
+                title="The privacy constraint"
+                body="WMS is stateless by design — computed fresh per session. But session frequency tracking raises questions about browser fingerprinting and cross-session state. This needs a legal/privacy review before implementation."
               />
             </div>
-          </Section>
+          </div>
+        </SectionCard>
 
+        {/* Footer CTA */}
+        <div className={`mt-8 flex gap-3 transition-all duration-700 delay-500 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <a
+            href="/experiment"
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-colors"
+          >
+            See EXP-C Live Results <ChevronRight className="h-4 w-4" />
+          </a>
+          <a
+            href="/"
+            className="flex items-center gap-2 py-3 px-4 rounded-xl glass border border-white/8 text-slate-300 hover:text-white font-medium text-sm transition-colors"
+          >
+            Back to Demo
+          </a>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// ─── Sub-components ────────────────────────────────────────────────────────────
+
+function SectionCard({
+  id, open, toggle, delay, animateIn, icon: Icon, iconColor, label, title, children,
+}: {
+  id: string; open: string | null; toggle: (id: string | null) => void; delay: string;
+  animateIn: boolean; icon: React.ElementType; iconColor: string; label: string; title: string;
+  children: React.ReactNode;
+}) {
+  const isOpen = open === id;
+  return (
+    <div
+      className={`glass rounded-2xl mb-4 border border-white/6 overflow-hidden transition-all duration-700 ${delay} ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+    >
+      <button
+        className="w-full flex items-center gap-3 p-5 text-left group hover:bg-white/2 transition-colors"
+        onClick={() => toggle(isOpen ? null : id)}
+      >
+        <div
+          className="h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0"
+          style={{ background: `${iconColor}15`, border: `1px solid ${iconColor}30` }}
+        >
+          <Icon className="h-4 w-4" style={{ color: iconColor }} />
+        </div>
+        <div className="flex-1">
+          <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: iconColor }}>
+            {label}
+          </div>
+          <div className="text-white font-semibold leading-tight">{title}</div>
+        </div>
+        <ChevronRight
+          className={`h-4 w-4 text-slate-500 transition-transform ${isOpen ? "rotate-90" : ""}`}
+        />
+      </button>
+      {isOpen && <div className="px-5 pb-5">{children}</div>}
+    </div>
+  );
+}
+
+function StatBox({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
+  return (
+    <div className="glass rounded-xl p-3 border border-white/5">
+      <div className="text-xs text-slate-500 mb-1">{label}</div>
+      <div className="text-xl font-bold" style={{ color }}>{value}</div>
+      <div className="text-[10px] text-slate-600 mt-0.5">{sub}</div>
+    </div>
+  );
+}
+
+function ExperimentCard({
+  id, icon: Icon, color, title, hypothesis, metric, status, rationale, scale, isActive,
+}: {
+  id: string; icon: React.ElementType; color: string; title: string; hypothesis: string;
+  metric: string; status: string; rationale: string; scale: string; isActive?: boolean;
+}) {
+  return (
+    <div
+      className="glass rounded-xl p-4 border transition-colors"
+      style={{ borderColor: isActive ? `${color}40` : "rgba(255,255,255,0.06)" }}
+    >
+      <div className="flex items-center gap-3 mb-2">
+        <div
+          className="h-7 w-7 rounded-lg flex items-center justify-center flex-shrink-0"
+          style={{ background: `${color}15`, border: `1px solid ${color}30` }}
+        >
+          <Icon className="h-3.5 w-3.5" style={{ color }} />
+        </div>
+        <div className="flex-1">
+          <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color }}>
+            EXP-{id}{isActive ? " · Currently Running" : " · Proposed"}
+          </div>
+          <div className="text-white text-sm font-semibold">{title}</div>
         </div>
       </div>
-    </div>
-  );
-}
-
-/* --- Sub-components --- */
-
-function Section({ id, title, icon, children }: { id: string; title: string; icon: string; children: React.ReactNode }) {
-  return (
-    <section id={id} style={{ marginBottom: 72, scrollMarginTop: 80 }}>
-      <h2
-        style={{
-          fontSize: "1.6rem",
-          fontWeight: 700,
-          color: "#e2e8f0",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          marginBottom: 20,
-          paddingBottom: 12,
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-        }}
-      >
-        <span>{icon}</span>
-        <span>{title}</span>
-      </h2>
-      {children}
-    </section>
-  );
-}
-
-function Callout({ color, children }: { color: string; children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        borderLeft: `3px solid ${color}`,
-        background: `${color}10`,
-        borderRadius: "0 8px 8px 0",
-        padding: "14px 18px",
-        color: "#cbd5e1",
-        lineHeight: 1.7,
-        fontSize: 15,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function ProblemCard({ num, title, body }: { num: string; title: string; body: string }) {
-  return (
-    <div
-      style={{
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        borderRadius: 12,
-        padding: 20,
-        display: "flex",
-        gap: 16,
-      }}
-    >
-      <div
-        style={{
-          flexShrink: 0,
-          width: 32,
-          height: 32,
-          borderRadius: 8,
-          background: "rgba(99,102,241,0.2)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 12,
-          fontWeight: 700,
-          color: "#a5b4fc",
-        }}
-      >
-        {num}
-      </div>
-      <div>
-        <div style={{ fontWeight: 600, color: "#e2e8f0", marginBottom: 6 }}>{title}</div>
-        <div style={{ color: "#94a3b8", lineHeight: 1.7, fontSize: 14 }}>{body}</div>
-      </div>
-    </div>
-  );
-}
-
-function UserCard({ initials, color, name, role, pains, jtbd }: { initials: string; color: string; name: string; role: string; pains: string[]; jtbd: string }) {
-  return (
-    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: 20 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-        <div style={{ width: 36, height: 36, borderRadius: 10, background: color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#fff" }}>
-          {initials}
+      <div className="space-y-2 text-xs">
+        <div>
+          <span className="text-slate-500 font-semibold uppercase tracking-wide text-[10px]">Hypothesis: </span>
+          <span className="text-slate-400">{hypothesis}</span>
         </div>
         <div>
-          <div style={{ fontWeight: 600, color: "#e2e8f0", fontSize: 14 }}>{name}</div>
-          <div style={{ fontSize: 11, color: "#64748b" }}>{role}</div>
+          <span className="text-slate-500 font-semibold uppercase tracking-wide text-[10px]">Metrics: </span>
+          <span className="text-slate-400">{metric}</span>
+        </div>
+        <div>
+          <span className="text-slate-500 font-semibold uppercase tracking-wide text-[10px]">Rationale: </span>
+          <span className="text-slate-400">{rationale}</span>
+        </div>
+        <div className="flex items-center gap-2 pt-1">
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-bold" style={{ color, background: `${color}12`, border: `1px solid ${color}25` }}>
+            {scale}
+          </span>
         </div>
       </div>
-      <div style={{ fontSize: 11, color: "#475569", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>Pain Points</div>
-      <ul style={{ margin: 0, padding: 0, listStyle: "none", marginBottom: 12 }}>
-        {pains.map((p) => (
-          <li key={p} style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.6, paddingLeft: 12, position: "relative" }}>
-            <span style={{ position: "absolute", left: 0, color: color }}>✗</span>
-            {p}
-          </li>
-        ))}
-      </ul>
-      <div style={{ background: `${color}15`, border: `1px solid ${color}30`, borderRadius: 8, padding: "10px 12px", fontSize: 12, color: "#cbd5e1", fontStyle: "italic", lineHeight: 1.5 }}>
-        &ldquo;{jtbd}&rdquo;
-      </div>
     </div>
   );
 }
 
-function EpicCard({ num, title, body, insight, badge, badgeColor }: { num: string; title: string; body: string; insight: string; badge: string; badgeColor: string }) {
+function NotBuildCard({ title, reason }: { title: string; reason: string }) {
   return (
-    <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: 24, marginBottom: 16 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-        <div style={{ background: `${badgeColor}25`, border: `1px solid ${badgeColor}50`, borderRadius: 6, padding: "3px 10px", fontSize: 11, fontWeight: 700, color: badgeColor, letterSpacing: "0.06em" }}>
-          Epic {num}
-        </div>
-        <div style={{ fontSize: 12, background: "rgba(255,255,255,0.07)", borderRadius: 6, padding: "3px 8px", color: "#64748b", fontWeight: 600 }}>{badge}</div>
+    <div className="glass rounded-xl p-4 border border-red-500/10">
+      <div className="flex items-start gap-2 mb-2">
+        <span className="text-red-400 text-xs font-bold mt-0.5 flex-shrink-0">✕</span>
+        <div className="text-sm font-semibold text-white">{title}</div>
       </div>
-      <h3 style={{ fontSize: 17, fontWeight: 700, color: "#e2e8f0", marginBottom: 10 }}>{title}</h3>
-      <p style={{ color: "#94a3b8", lineHeight: 1.75, fontSize: 14, marginBottom: 14 }}>{body}</p>
-      <div style={{ background: `${badgeColor}10`, borderLeft: `2px solid ${badgeColor}`, borderRadius: "0 6px 6px 0", padding: "8px 14px", fontSize: 12, color: "#a5b4fc", fontStyle: "italic" }}>
-        Key Insight: {insight}
-      </div>
+      <p className="text-slate-500 text-xs leading-relaxed pl-4">{reason}</p>
     </div>
   );
 }
 
-function MetricLabel({ children }: { children: React.ReactNode }) {
+function ROICard({ exp, lever, color, assumption, estimate, risk }: {
+  exp: string; lever: string; color: string; assumption: string; estimate: string; risk: string;
+}) {
   return (
-    <div style={{ fontSize: 12, fontWeight: 700, color: "#6366f1", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
-      {children}
-    </div>
-  );
-}
-
-function MetricTable({ rows }: { rows: string[][] }) {
-  return (
-    <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, overflow: "hidden", marginBottom: 8 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1.5fr 1.5fr 2fr", gap: 0 }}>
-        {["Metric", "Baseline", "Target", "How Measured"].map((h) => (
-          <div key={h} style={{ padding: "10px 16px", fontSize: 11, fontWeight: 700, color: "#475569", background: "rgba(255,255,255,0.03)", letterSpacing: "0.06em", textTransform: "uppercase", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>{h}</div>
-        ))}
-        {rows.map((row, i) =>
-          row.map((cell, j) => (
-            <div key={`${i}-${j}`} style={{ padding: "12px 16px", fontSize: 13, color: j === 2 ? "#10b981" : "#94a3b8", borderBottom: i < rows.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none", fontWeight: j === 2 ? 600 : 400 }}>
-              {cell}
-            </div>
-          ))
-        )}
+    <div className="glass rounded-xl p-4 border border-white/6">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ color, background: `${color}15`, border: `1px solid ${color}25` }}>
+          {exp} · {lever}
+        </span>
+        <span className={`text-[9px] ml-auto px-1.5 py-0.5 rounded-full font-semibold ${risk === "Low" ? "text-green-400 bg-green-400/10" : risk === "Med" ? "text-amber-400 bg-amber-400/10" : "text-red-400 bg-red-400/10"}`}>
+          Risk: {risk}
+        </span>
       </div>
-    </div>
-  );
-}
-
-function ArchLayer({ title, detail, color, note }: { title: string; detail: string; color: string; note: string }) {
-  return (
-    <div style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${color}30`, borderRadius: 12, padding: 20, borderLeft: `3px solid ${color}` }}>
-      <div style={{ fontWeight: 700, color: "#e2e8f0", marginBottom: 8, fontSize: 15 }}>{title}</div>
-      <p style={{ color: "#94a3b8", lineHeight: 1.7, fontSize: 14, marginBottom: 10 }}>{detail}</p>
-      <div style={{ fontSize: 12, color: "#64748b", fontStyle: "italic", lineHeight: 1.6 }}>
-        ↳ {note}
-      </div>
+      <div className="text-xs text-slate-500 mb-2 leading-relaxed">{assumption}</div>
+      <div className="text-sm font-bold" style={{ color }}>{estimate}</div>
     </div>
   );
 }
 
 function ReflectionCard({ title, body }: { title: string; body: string }) {
   return (
-    <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: 20 }}>
-      <div style={{ fontWeight: 700, color: "#e2e8f0", marginBottom: 8 }}>{title}</div>
-      <p style={{ color: "#94a3b8", lineHeight: 1.75, fontSize: 14, margin: 0 }}>{body}</p>
+    <div className="glass rounded-xl p-4 border border-white/6">
+      <div className="text-sm font-semibold text-slate-200 mb-2">{title}</div>
+      <p className="text-slate-500 text-xs leading-relaxed">{body}</p>
     </div>
   );
 }
 
-function HypothesisStep({ num, role, roleColor, title, body }: { num: string; role: string; roleColor: string; title: string; body: string }) {
+function HypothesisStep({ num, role, roleColor, title, body }: {
+  num: string; role: string; roleColor: string; title: string; body: string;
+}) {
   return (
-    <div
-      style={{
-        background: "rgba(255,255,255,0.02)",
-        border: "1px solid rgba(255,255,255,0.07)",
-        borderRadius: 12,
-        padding: 20,
-        display: "flex",
-        gap: 16,
-      }}
-    >
-      <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+    <div className="flex gap-3 p-3 glass rounded-xl border border-white/5">
+      <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
         <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 8,
-            background: `${roleColor}20`,
-            border: `1px solid ${roleColor}40`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 12,
-            fontWeight: 700,
-            color: roleColor,
-          }}
+          className="h-7 w-7 rounded-lg flex items-center justify-center text-xs font-bold"
+          style={{ background: `${roleColor}15`, border: `1px solid ${roleColor}30`, color: roleColor }}
         >
           {num}
         </div>
         <div
-          style={{
-            fontSize: 9,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: roleColor,
-            background: `${roleColor}15`,
-            border: `1px solid ${roleColor}30`,
-            borderRadius: 4,
-            padding: "2px 6px",
-            whiteSpace: "nowrap",
-          }}
+          className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded"
+          style={{ color: roleColor, background: `${roleColor}10` }}
         >
           {role}
         </div>
       </div>
       <div>
-        <div style={{ fontWeight: 600, color: "#e2e8f0", marginBottom: 6, fontSize: 14 }}>{title}</div>
-        <div style={{ color: "#94a3b8", lineHeight: 1.7, fontSize: 13 }}>{body}</div>
+        <div className="text-sm font-semibold text-white mb-1">{title}</div>
+        <div className="text-xs text-slate-400 leading-relaxed">{body}</div>
       </div>
     </div>
   );

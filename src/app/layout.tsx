@@ -5,18 +5,18 @@ import Navbar from "@/components/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "StormGate — AI-Powered Contextual Weather Subscriptions",
+  title: "StormGate — TWC Web Consumer Platform | PM Portfolio",
   description:
-    "A growth experimentation engine that uses real-time weather signals and AI to dynamically optimize subscription conversion. Built as a portfolio project for The Weather Company APM role.",
+    "A PM growth framework for The Weather Company's Web Consumer Platform. Demonstrates how a Weather Moment Score can unlock three revenue levers — advertising, engagement, and premium — by reading real-time weather signals.",
   openGraph: {
-    title: "StormGate — Contextual Weather Subscription Engine",
+    title: "StormGate — TWC Growth Framework | Ali Hasan APM",
     description:
-      "AI-powered contextual paywalls that convert weather urgency into subscription revenue.",
+      "PM portfolio project: How do you grow revenue per visit on weather.com for 360M free users without destroying the ad model? A working experiment design system built for TWC's Web Consumer Platform team.",
     type: "website",
   },
 };
