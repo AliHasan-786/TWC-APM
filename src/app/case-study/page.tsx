@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 const sections = [
   { id: "summary", label: "Executive Summary" },
   { id: "problem", label: "The Problem" },
+  { id: "hypothesis", label: "Hypothesis Formation" },
   { id: "users", label: "Target Users" },
   { id: "solution", label: "The Solution" },
   { id: "flywheel", label: "The Growth Flywheel" },
@@ -143,13 +144,13 @@ export default function CaseStudyPage() {
           {/* Executive Summary */}
           <Section id="summary" title="Executive Summary" icon="📋">
             <Callout color="#6366f1">
-              The Weather Company reaches 360M monthly active users but faces a critical monetization tension: blanket paywalls shown to all users regardless of context generate churn, not conversions.
+              TWC&apos;s core consumer revenue model is <strong style={{ color: "#e2e8f0" }}>advertising-first</strong> — weather.com serves 360M monthly free users, monetized through contextual ad placements. StormGate tests whether a <strong style={{ color: "#e2e8f0" }}>premium subscription layer</strong> can complement that model by converting the highest-intent users during weather moments when ad revenue alone undersells the platform&apos;s value.
             </Callout>
             <p style={{ color: "#94a3b8", lineHeight: 1.8, marginTop: 16 }}>
-              StormGate is a contextual subscription engine that solves this by reading real-time weather data — severity, urgency, local conditions — and dynamically adjusting paywall copy, timing, and offer framing to match the user&apos;s in-the-moment emotional and informational state.
+              The core hypothesis: severe weather events create acute, time-sensitive demand for precision forecasts that free ad-supported content cannot satisfy. A contextual paywall — one that reads real-time conditions and adjusts its copy, timing, and offer framing to match the user&apos;s exact situation — can capture this demand without cannibalizing the free-tier engagement that drives advertising impressions.
             </p>
             <p style={{ color: "#94a3b8", lineHeight: 1.8, marginTop: 12 }}>
-              When a category-4 hurricane is approaching Miami, the user&apos;s willingness-to-pay for premium forecasts is order-of-magnitude higher than a mild Tuesday afternoon. StormGate captures that delta. The result: estimated +18–32% paywall conversion improvement during high-severity weather events, without increasing paywall frequency for low-intent users.
+              This is not a replacement for TWC&apos;s advertising business. It&apos;s a <strong style={{ color: "#e2e8f0" }}>complementary revenue layer</strong> that activates only when contextual signals indicate the user&apos;s willingness-to-pay meaningfully exceeds the CPM value of showing them another ad. The result: estimated +18–32% paywall conversion during high-severity events, with zero impact on free-tier ad inventory for low-intent sessions.
             </p>
           </Section>
 
@@ -180,6 +181,48 @@ export default function CaseStudyPage() {
                 body="Weather is inherently contextual. 'Unlock Premium Forecasts' is the same message for a user in a blizzard and a user checking if it&apos;ll rain at a wedding. Generic copy is a growth ceiling."
               />
             </div>
+          </Section>
+
+          {/* Hypothesis Formation — NEW SECTION */}
+          <Section id="hypothesis" title="Hypothesis Formation" icon="🔬">
+            <p style={{ color: "#94a3b8", lineHeight: 1.8, marginBottom: 24 }}>
+              In practice, this experiment would require close collaboration between the APM and TWC&apos;s web data scientist before a single line of code is written. Here&apos;s how that process would unfold.
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24 }}>
+              <HypothesisStep
+                num="01"
+                role="PM"
+                roleColor="#6366f1"
+                title="Identify the Signal"
+                body="Starting from session-level analytics on weather.com, I&apos;d filter for sessions where users visited the radar or severe weather alert pages — a proxy for high-intent weather consumption. Hypothesis: these sessions have meaningfully different conversion rates, and we&apos;re not capturing them."
+              />
+              <HypothesisStep
+                num="02"
+                role="Data Scientist"
+                roleColor="#8b5cf6"
+                title="Validate the Signal in Historical Data"
+                body="The data science partner would pull 90 days of historical session data segmented by WMO weather code and wind speed at session time. The question: does paywall CVR correlate with weather severity? If severe sessions already convert at 3–4% vs. 1.5% for clear sessions, the hypothesis has prior evidence."
+              />
+              <HypothesisStep
+                num="03"
+                role="PM + DS"
+                roleColor="#10b981"
+                title="Define the Threshold and Guardrails Together"
+                body="We&apos;d jointly define what counts as &apos;severe enough&apos; to trigger the contextual variant: wind speed &gt;35 mph OR precipitation probability &gt;70% OR WMO code ≥ 61 (rain/snow/storm codes). We&apos;d also agree on guardrail metrics before launch: paywall dismissal rate must not increase &gt;5%, and session abandonment must stay flat."
+              />
+              <HypothesisStep
+                num="04"
+                role="PM"
+                roleColor="#6366f1"
+                title="Write the Formal Hypothesis"
+                body='&quot;For sessions where WMO weather severity ≥ &apos;Moderate&apos; (as defined by our joint threshold), showing contextual paywall copy that names the user&apos;s exact conditions will increase free trial start rate by ≥1.5 percentage points vs. the generic control, within 14 days, at 95% statistical significance.&quot;'
+              />
+            </div>
+
+            <Callout color="#8b5cf6">
+              <strong>Why this process matters:</strong> The hypothesis threshold (≥ Moderate severity) directly shapes the experiment&apos;s reach and statistical power. A threshold that&apos;s too narrow (Extreme only) gets insufficient traffic to reach significance. Too broad (any weather) dilutes the effect. Getting this right requires the data scientist&apos;s knowledge of session volume by severity band — not just PM instinct.
+            </Callout>
           </Section>
 
           {/* Target Users */}
@@ -573,6 +616,61 @@ function ReflectionCard({ title, body }: { title: string; body: string }) {
     <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, padding: 20 }}>
       <div style={{ fontWeight: 700, color: "#e2e8f0", marginBottom: 8 }}>{title}</div>
       <p style={{ color: "#94a3b8", lineHeight: 1.75, fontSize: 14, margin: 0 }}>{body}</p>
+    </div>
+  );
+}
+
+function HypothesisStep({ num, role, roleColor, title, body }: { num: string; role: string; roleColor: string; title: string; body: string }) {
+  return (
+    <div
+      style={{
+        background: "rgba(255,255,255,0.02)",
+        border: "1px solid rgba(255,255,255,0.07)",
+        borderRadius: 12,
+        padding: 20,
+        display: "flex",
+        gap: 16,
+      }}
+    >
+      <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+        <div
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: 8,
+            background: `${roleColor}20`,
+            border: `1px solid ${roleColor}40`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 12,
+            fontWeight: 700,
+            color: roleColor,
+          }}
+        >
+          {num}
+        </div>
+        <div
+          style={{
+            fontSize: 9,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            color: roleColor,
+            background: `${roleColor}15`,
+            border: `1px solid ${roleColor}30`,
+            borderRadius: 4,
+            padding: "2px 6px",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {role}
+        </div>
+      </div>
+      <div>
+        <div style={{ fontWeight: 600, color: "#e2e8f0", marginBottom: 6, fontSize: 14 }}>{title}</div>
+        <div style={{ color: "#94a3b8", lineHeight: 1.7, fontSize: 13 }}>{body}</div>
+      </div>
     </div>
   );
 }

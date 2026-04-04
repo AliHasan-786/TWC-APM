@@ -72,7 +72,16 @@ export default function ExperimentPage() {
             EXP-041: Does contextual paywall copy outperform a generic one?
           </h1>
           <p className="text-slate-400 max-w-2xl text-sm leading-relaxed">
-            <strong className="text-slate-300">Hypothesis:</strong> Naming the user&apos;s exact weather conditions in the paywall headline — instead of a generic "Unlock Premium" message — increases free trial conversion rate, especially during severe weather events.
+            <strong className="text-slate-300">Hypothesis (jointly developed with web data scientist):</strong> For sessions
+            where WMO weather severity ≥ Moderate (wind speed &gt;35 mph OR precip probability &gt;70%), showing
+            paywall copy that names the user&apos;s exact conditions will increase free trial start rate by ≥1.5 percentage
+            points vs. the generic control — within 14 days, at 95% statistical significance. Guardrail: paywall
+            dismissal rate must not increase &gt;5%.
+          </p>
+          <p className="text-slate-500 text-xs mt-2 leading-relaxed">
+            Context: TWC&apos;s primary revenue is advertising. This experiment tests whether a contextual premium layer
+            can complement ad revenue by capturing conversion at moments when user intent exceeds the CPM value of
+            another ad impression.
           </p>
         </div>
 
@@ -99,6 +108,23 @@ export default function ExperimentPage() {
             color="#22c55e"
             icon={CheckCircle2}
           />
+        </div>
+
+        {/* Scale context — the stakes */}
+        <div className={`glass rounded-2xl p-4 mb-8 border border-purple-500/15 transition-all duration-700 delay-150 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <div className="flex items-start gap-3">
+            <div className="text-lg">🌍</div>
+            <div>
+              <div className="text-sm font-semibold text-white mb-1">At TWC scale, this experiment reaches millions in days</div>
+              <p className="text-slate-400 text-xs leading-relaxed">
+                weather.com serves ~360M MAU. Applying a conservative estimate of 50M US users/month, with ~30% exposed
+                to moderate-or-above weather conditions on any given day — at 50% rollout, this experiment reaches{" "}
+                <strong className="text-slate-200">~7.5M users within the first 72 hours</strong>. Statistical significance
+                is achievable in under 5 days at even a 0.5pp detectable effect size. This is what the JD means by
+                &quot;your experiments will reach millions of users within days.&quot;
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* The key insight callout */}
