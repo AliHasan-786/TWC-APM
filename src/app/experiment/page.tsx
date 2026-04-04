@@ -1,479 +1,180 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { FlaskConical, TrendingUp, BarChart3, CheckCircle2, AlertTriangle, Info } from "lucide-react";
 import {
-  FlaskConical,
-  TrendingUp,
-  Users,
-  Target,
-  BarChart3,
-  CheckCircle2,
-  ChevronRight,
-  AlertTriangle,
-  Zap,
-} from "lucide-react";
-import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
-  Line,
-  Legend,
 } from "recharts";
 
-// Simulated experiment data
-const CONTROL_CVR = 2.1;
-const VARIANT_CVR_BY_SEVERITY: Record<string, number> = {
-  extreme: 9.4,
-  severe: 6.8,
-  moderate: 3.9,
-  mild: 2.7,
-  clear: 2.4,
-};
-
-const SEGMENT_DATA = [
-  { segment: "Extreme Weather", control: 2.1, variant: 9.4, lift: "+348%" },
-  { segment: "Severe Weather", control: 2.1, variant: 6.8, lift: "+224%" },
-  { segment: "Moderate Weather", control: 2.1, variant: 3.9, lift: "+86%" },
-  { segment: "Mild Weather", control: 2.1, variant: 2.7, lift: "+29%" },
-  { segment: "Clear Weather", control: 2.1, variant: 2.4, lift: "+14%" },
+// All data is clearly synthetic — calibrated against industry benchmarks
+const SEGMENT_ROWS = [
+  { segment: "Extreme Weather", emoji: "🌀", control: "2.1%", variant: "9.4%", lift: "+348%", color: "#dc2626", note: "Biggest delta — peak fear, peak intent" },
+  { segment: "Severe Weather", emoji: "⛈️", control: "2.1%", variant: "6.8%", lift: "+224%", color: "#ef4444", note: "Storm warnings, high urgency" },
+  { segment: "Moderate Weather", emoji: "🌧️", control: "2.1%", variant: "3.9%", lift: "+86%", color: "#f59e0b", note: "Rain events — timing precision sells" },
+  { segment: "Mild / Clear", emoji: "🌤️", control: "2.1%", variant: "2.5%", lift: "+19%", color: "#38bdf8", note: "Minimal lift — control & variant similar" },
 ];
 
-const TIME_SERIES_DATA = Array.from({ length: 14 }, (_, i) => {
-  const day = i + 1;
-  const controlBase = CONTROL_CVR + (Math.random() - 0.5) * 0.3;
-  const variantBase = 4.1 + Math.min(i * 0.12, 1.2) + (Math.random() - 0.5) * 0.4;
-  return {
-    day: `Day ${day}`,
-    "Control (Static)": Math.round(controlBase * 10) / 10,
-    "StormGate AI": Math.round(variantBase * 10) / 10,
-  };
-});
-
-const FUNNEL_DATA = {
-  control: [
-    { stage: "Page View", count: 100000, pct: 100 },
-    { stage: "Paywall Shown", count: 14000, pct: 14 },
-    { stage: "CTA Clicked", count: 2940, pct: 2.94 },
-    { stage: "Trial Started", count: 2100, pct: 2.1 },
-  ],
-  variant: [
-    { stage: "Page View", count: 100000, pct: 100 },
-    { stage: "Paywall Triggered", count: 18200, pct: 18.2 },
-    { stage: "CTA Clicked", count: 5096, pct: 5.1 },
-    { stage: "Trial Started", count: 4015, pct: 4.0 },
-  ],
-};
-
-const SEVERITY_COLORS: Record<string, string> = {
-  "Extreme Weather": "#dc2626",
-  "Severe Weather": "#ef4444",
-  "Moderate Weather": "#f59e0b",
-  "Mild Weather": "#22c55e",
-  "Clear Weather": "#38bdf8",
-};
-
-function StatCard({
-  label,
-  value,
-  sub,
-  color,
-  icon: Icon,
-}: {
-  label: string;
-  value: string;
-  sub: string;
-  color: string;
-  icon: React.ElementType;
-}) {
-  return (
-    <div className="glass rounded-2xl p-5">
-      <div className="flex items-center gap-2 mb-3">
-        <div
-          className="h-8 w-8 rounded-lg flex items-center justify-center"
-          style={{ background: `${color}15`, border: `1px solid ${color}30` }}
-        >
-          <Icon className="h-4 w-4" style={{ color }} />
-        </div>
-        <span className="text-slate-400 text-sm">{label}</span>
-      </div>
-      <div className="text-3xl font-bold text-white">{value}</div>
-      <div className="text-sm mt-1" style={{ color }}>
-        {sub}
-      </div>
-    </div>
-  );
-}
+// 14-day time series showing increasing divergence as experiment matures
+const TIME_DATA = [
+  { day: "D1", Control: 2.0, StormGate: 3.8 },
+  { day: "D2", Control: 2.2, StormGate: 4.0 },
+  { day: "D3", Control: 2.0, StormGate: 4.1 },
+  { day: "D4", Control: 2.1, StormGate: 3.9 },
+  { day: "D5", Control: 2.3, StormGate: 4.2 },
+  { day: "D6", Control: 2.0, StormGate: 4.4 },
+  { day: "D7", Control: 2.1, StormGate: 4.1 },
+  { day: "D8", Control: 1.9, StormGate: 4.3 },
+  { day: "D9", Control: 2.2, StormGate: 4.5 },
+  { day: "D10", Control: 2.1, StormGate: 4.2 },
+  { day: "D11", Control: 2.0, StormGate: 4.4 },
+  { day: "D12", Control: 2.2, StormGate: 4.6 },
+  { day: "D13", Control: 2.1, StormGate: 4.3 },
+  { day: "D14", Control: 2.1, StormGate: 4.0 },
+];
 
 export default function ExperimentPage() {
   const [animateIn, setAnimateIn] = useState(false);
-  const [showSignificance, setShowSignificance] = useState(false);
-  const [runningDays, setRunningDays] = useState(0);
+  const [visibleDays, setVisibleDays] = useState(0);
 
   useEffect(() => {
     setTimeout(() => setAnimateIn(true), 100);
-    setTimeout(() => setShowSignificance(true), 1200);
-
-    const interval = setInterval(() => {
-      setRunningDays((d) => Math.min(d + 1, 14));
-    }, 80);
+    const interval = setInterval(() => setVisibleDays((d) => Math.min(d + 1, 14)), 80);
     return () => clearInterval(interval);
   }, []);
 
-  const visibleTimeSeries = TIME_SERIES_DATA.slice(0, Math.max(1, runningDays));
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#020b18] to-[#040f1f] py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Page header */}
-        <div
-          className={`mb-10 transition-all duration-700 ${
-            animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
+    <div className="min-h-screen bg-gradient-to-b from-[#020b18] to-[#040f1f] py-10">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+
+        {/* Synthetic data disclaimer — top, prominent */}
+        <div className="flex items-start gap-2.5 mb-8 p-3.5 rounded-xl bg-amber-500/8 border border-amber-500/20">
+          <AlertTriangle className="h-4 w-4 text-amber-400 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-amber-300/80 leading-relaxed">
+            <strong className="text-amber-300">Simulated experiment data.</strong> CVR figures are modeled from industry benchmarks (Reforge, Amplitude 2024) and behavioral economics research on urgency-driven conversion. This dashboard shows what a real StormGate A/B test result would look like — not fabricated success rates.
+          </div>
+        </div>
+
+        {/* Header */}
+        <div className={`mb-8 transition-all duration-700 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
           <div className="flex items-center gap-2 mb-3">
             <div className="h-8 w-8 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
               <FlaskConical className="h-4 w-4 text-blue-400" />
             </div>
-            <span className="text-sm text-blue-400 font-semibold uppercase tracking-wider">
-              Experiment Dashboard
-            </span>
-            <div className="flex items-center gap-1.5 ml-2 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20">
-              <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-xs text-green-300 font-medium">Live · Day {runningDays} of 14</span>
-            </div>
+            <span className="text-sm text-blue-400 font-semibold uppercase tracking-wider">Experiment</span>
           </div>
-
-          <h1 className="text-3xl font-bold text-white mb-2">
-            EXP-041: Contextual Paywall vs. Static Baseline
+          <h1 className="text-2xl font-bold text-white mb-2">
+            EXP-041: Does contextual paywall copy outperform a generic one?
           </h1>
-          <p className="text-slate-400 max-w-2xl">
-            Testing whether AI-powered, weather-triggered paywall copy outperforms a static subscription prompt
-            across The Weather Channel's web consumer platform.
+          <p className="text-slate-400 max-w-2xl text-sm leading-relaxed">
+            <strong className="text-slate-300">Hypothesis:</strong> Naming the user&apos;s exact weather conditions in the paywall headline — instead of a generic "Unlock Premium" message — increases free trial conversion rate, especially during severe weather events.
           </p>
         </div>
 
-        {/* Experiment ticket */}
-        <div
-          className={`glass rounded-2xl p-6 mb-8 border border-blue-500/15 transition-all duration-700 delay-100 ${
-            animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
-          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Target className="h-4 w-4" />
-            Experiment Spec
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-1">
-              <div className="text-xs text-slate-500 uppercase tracking-wide">Hypothesis</div>
-              <p className="text-slate-200 text-sm leading-relaxed">
-                Matching paywall copy urgency to current weather severity will increase free trial CVR by
-                at least 40% in severe/extreme weather segments, with no negative impact on clear-weather
-                users.
-              </p>
-            </div>
-            <div className="space-y-3">
-              <div>
-                <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Primary Metric</div>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-green-400" />
-                  <span className="text-slate-200 text-sm">Free Trial Start Rate (CVR)</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">
-                  Secondary Metrics
-                </div>
-                <ul className="text-slate-400 text-xs space-y-0.5">
-                  <li>• 30-day subscriber retention</li>
-                  <li>• Average time-to-paywall</li>
-                  <li>• Paywall dismiss rate</li>
-                  <li>• Revenue per user (RPU)</li>
-                </ul>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div>
-                <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Target Sample</div>
-                <div className="text-slate-200 text-sm">500K users (50/50 split)</div>
-                <div className="text-slate-400 text-xs">~95% statistical power at α=0.05</div>
-              </div>
-              <div>
-                <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Guardrails</div>
-                <ul className="text-slate-400 text-xs space-y-0.5">
-                  <li>• No change to free content access</li>
-                  <li>• Max 1 paywall per session</li>
-                  <li>• Sev ≥ 8 weather = trigger immediately</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Top-line results */}
-        <div
-          className={`grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 transition-all duration-700 delay-200 ${
-            animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
-          <StatCard
+        {/* Three key numbers */}
+        <div className={`grid grid-cols-3 gap-4 mb-8 transition-all duration-700 delay-100 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <BigStat
             label="Control CVR"
             value="2.1%"
-            sub="Baseline (Static)"
+            sub="Generic paywall, all conditions"
             color="#64748b"
             icon={BarChart3}
           />
-          <StatCard
-            label="Variant CVR"
+          <BigStat
+            label="StormGate CVR"
             value="4.0%"
-            sub="StormGate AI ✦"
+            sub="Contextual copy, weighted avg"
             color="#3b82f6"
             icon={TrendingUp}
           />
-          <StatCard
-            label="Overall Lift"
-            value="+90.5%"
-            sub="p < 0.001 ✓ Significant"
+          <BigStat
+            label="Result"
+            value="+90%"
+            sub="p < 0.001 — statistically significant"
             color="#22c55e"
             icon={CheckCircle2}
           />
-          <StatCard
-            label="Incremental Revenue"
-            value="+$2.3M"
-            sub="Projected annual ARR"
-            color="#a855f7"
-            icon={Users}
-          />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* CVR over time */}
-          <div
-            className={`glass rounded-2xl p-6 transition-all duration-700 delay-300 ${
-              animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">
-              CVR Over Time (%)
-            </h3>
-            <ResponsiveContainer width="100%" height={220}>
-              <LineChart data={visibleTimeSeries}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis
-                  dataKey="day"
-                  tick={{ fill: "#64748b", fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis
-                  tick={{ fill: "#64748b", fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                  domain={[0, 6]}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: "#071628",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "8px",
-                    color: "#f1f5f9",
-                  }}
-                />
-                <Legend
-                  wrapperStyle={{ fontSize: "12px", color: "#94a3b8" }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="Control (Static)"
-                  stroke="#64748b"
-                  strokeWidth={2}
-                  dot={false}
-                  strokeDasharray="5 5"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="StormGate AI"
-                  stroke="#3b82f6"
-                  strokeWidth={2.5}
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* CVR by weather segment */}
-          <div
-            className={`glass rounded-2xl p-6 transition-all duration-700 delay-400 ${
-              animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">
-              CVR by Weather Segment (%)
-            </h3>
-            <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={SEGMENT_DATA} barGap={6}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis
-                  dataKey="segment"
-                  tick={{ fill: "#64748b", fontSize: 10 }}
-                  axisLine={false}
-                  tickLine={false}
-                  interval={0}
-                  angle={-20}
-                  textAnchor="end"
-                  height={50}
-                />
-                <YAxis
-                  tick={{ fill: "#64748b", fontSize: 11 }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: "#071628",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "8px",
-                    color: "#f1f5f9",
-                  }}
-                />
-                <Bar dataKey="control" name="Control" fill="#334155" radius={[4, 4, 0, 0]} />
-                <Bar
-                  dataKey="variant"
-                  name="StormGate AI"
-                  fill="#3b82f6"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+        {/* The key insight callout */}
+        <div className={`glass rounded-2xl p-5 mb-8 border border-blue-500/15 transition-all duration-700 delay-150 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <div className="flex gap-3">
+            <Info className="h-4 w-4 text-blue-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <div className="text-sm font-semibold text-white mb-1">The key insight</div>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                The average lift (+90%) masks the more interesting story: StormGate&apos;s biggest conversion gains happen exactly when user willingness-to-pay is highest — during extreme weather (+348%). During clear weather, the lift is only +19%. This means the engine is working as designed: <strong className="text-slate-300">more copy precision where it matters, minimal disruption where it doesn&apos;t.</strong>
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Segment breakdown table */}
-        <div
-          className={`glass rounded-2xl p-6 mb-8 transition-all duration-700 delay-500 ${
-            animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
-          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Zap className="h-4 w-4" />
-            Segment Analysis — Where StormGate Wins
-          </h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-white/5">
-                  <th className="text-left py-2 text-slate-500 font-medium text-xs uppercase tracking-wide">
-                    Weather Segment
-                  </th>
-                  <th className="text-right py-2 text-slate-500 font-medium text-xs uppercase tracking-wide">
-                    Control CVR
-                  </th>
-                  <th className="text-right py-2 text-slate-500 font-medium text-xs uppercase tracking-wide">
-                    Variant CVR
-                  </th>
-                  <th className="text-right py-2 text-slate-500 font-medium text-xs uppercase tracking-wide">
-                    Relative Lift
-                  </th>
-                  <th className="text-right py-2 text-slate-500 font-medium text-xs uppercase tracking-wide">
-                    Significance
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/3">
-                {SEGMENT_DATA.map((row) => {
-                  const color = SEVERITY_COLORS[row.segment] ?? "#64748b";
-                  return (
-                    <tr key={row.segment} className="hover:bg-white/3 transition-colors">
-                      <td className="py-3">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="h-2.5 w-2.5 rounded-full flex-shrink-0"
-                            style={{ background: color }}
-                          />
-                          <span className="text-slate-200">{row.segment}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 text-right text-slate-400">{row.control}%</td>
-                      <td className="py-3 text-right text-white font-medium">{row.variant}%</td>
-                      <td className="py-3 text-right">
-                        <span
-                          className="px-2 py-0.5 rounded-md text-xs font-bold"
-                          style={{
-                            color,
-                            background: `${color}15`,
-                            border: `1px solid ${color}30`,
-                          }}
-                        >
-                          {row.lift}
-                        </span>
-                      </td>
-                      <td className="py-3 text-right">
-                        {showSignificance && (
-                          <span className="text-green-400 text-xs flex items-center justify-end gap-1">
-                            <CheckCircle2 className="h-3 w-3" />
-                            p &lt; 0.001
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        {/* CVR over time chart */}
+        <div className={`glass rounded-2xl p-6 mb-6 transition-all duration-700 delay-200 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-1">Conversion Rate Over 14 Days</h3>
+          <p className="text-xs text-slate-600 mb-4">Gap between variants is consistent — not driven by a single spike event</p>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={TIME_DATA.slice(0, Math.max(1, visibleDays))}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+              <XAxis dataKey="day" tick={{ fill: "#64748b", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "#64748b", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 6]} unit="%" />
+              <Tooltip
+                contentStyle={{ background: "#071628", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", color: "#f1f5f9", fontSize: 12 }}
+                formatter={(val) => [`${val ?? ""}%`]}
+              />
+              <Line type="monotone" dataKey="Control" stroke="#475569" strokeWidth={2} dot={false} strokeDasharray="5 5" name="A: Control" />
+              <Line type="monotone" dataKey="StormGate" stroke="#3b82f6" strokeWidth={2.5} dot={false} name="B: StormGate AI" />
+            </LineChart>
+          </ResponsiveContainer>
+          <div className="flex items-center gap-5 mt-3 justify-center">
+            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+              <div className="w-5 h-0.5 bg-slate-500" style={{ borderTop: "2px dashed #475569" }} />
+              A: Generic (Control)
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <div className="w-5 h-0.5 bg-blue-500" />
+              B: StormGate AI
+            </div>
           </div>
         </div>
 
-        {/* Funnel comparison */}
-        <div
-          className={`glass rounded-2xl p-6 mb-8 transition-all duration-700 delay-600 ${
-            animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
-          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6 flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Conversion Funnel Comparison (per 100K users)
-          </h3>
-          <div className="grid grid-cols-2 gap-8">
-            {(["control", "variant"] as const).map((v) => {
-              const data = FUNNEL_DATA[v];
-              const isVariant = v === "variant";
+        {/* Segment breakdown — the most important table */}
+        <div className={`glass rounded-2xl p-6 mb-6 transition-all duration-700 delay-300 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-1">CVR By Weather Segment</h3>
+          <p className="text-xs text-slate-600 mb-5">Lift scales with severity — no guardrail violations on mild/clear segments</p>
+          <div className="space-y-4">
+            {SEGMENT_ROWS.map((row) => {
+              const liftNum = parseInt(row.lift.replace("+", "").replace("%", ""));
               return (
-                <div key={v}>
-                  <div className="text-xs font-semibold mb-4" style={{ color: isVariant ? "#3b82f6" : "#64748b" }}>
-                    {isVariant ? "B: StormGate AI" : "A: Control (Static)"}
+                <div key={row.segment}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">{row.emoji}</span>
+                      <span className="text-sm text-slate-200 font-medium">{row.segment}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-slate-500">{row.control} → {row.variant}</span>
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-md" style={{ color: row.color, background: `${row.color}15`, border: `1px solid ${row.color}30` }}>
+                        {row.lift}
+                      </span>
+                    </div>
                   </div>
-                  <div className="space-y-3">
-                    {data.map((stage, i) => (
-                      <div key={stage.stage}>
-                        <div className="flex justify-between text-xs text-slate-400 mb-1">
-                          <span>{stage.stage}</span>
-                          <span className={isVariant && i > 0 ? "text-blue-400 font-medium" : ""}>
-                            {stage.pct}%
-                          </span>
-                        </div>
-                        <div className="h-6 rounded-lg bg-slate-800 overflow-hidden">
-                          <div
-                            className="h-full rounded-lg transition-all duration-1000 flex items-center justify-end pr-2"
-                            style={{
-                              width: animateIn ? `${stage.pct}%` : "0%",
-                              background: isVariant
-                                ? `linear-gradient(90deg, #1d4ed8, #3b82f6)`
-                                : "#334155",
-                              minWidth: stage.pct > 5 ? "auto" : "40px",
-                            }}
-                          >
-                            <span className="text-[10px] font-bold text-white/80">
-                              {stage.count.toLocaleString()}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: animateIn ? `${Math.min(liftNum / 4, 100)}%` : "0%",
+                        background: `linear-gradient(90deg, ${row.color}80, ${row.color})`,
+                        transitionDelay: `${SEGMENT_ROWS.indexOf(row) * 100 + 400}ms`,
+                      }}
+                    />
                   </div>
+                  <div className="text-[10px] text-slate-600 mt-1">{row.note}</div>
                 </div>
               );
             })}
@@ -481,33 +182,17 @@ export default function ExperimentPage() {
         </div>
 
         {/* PM recommendation */}
-        <div
-          className={`glass rounded-2xl p-6 border border-green-500/15 transition-all duration-700 delay-700 ${
-            animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
-        >
-          <div className="flex items-start gap-4">
-            <div className="h-10 w-10 rounded-xl bg-green-500/15 border border-green-500/25 flex items-center justify-center flex-shrink-0">
-              <CheckCircle2 className="h-5 w-5 text-green-400" />
-            </div>
+        <div className={`glass rounded-2xl p-5 border border-green-500/15 transition-all duration-700 delay-400 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+          <div className="flex items-start gap-3">
+            <CheckCircle2 className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="text-white font-semibold mb-1 flex items-center gap-2">
-                PM Recommendation: Ship Variant B
-                <ChevronRight className="h-4 w-4 text-green-400" />
-              </h3>
+              <h3 className="text-white font-semibold mb-1">PM Recommendation: Ship Variant B with severity gating</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
-                StormGate AI delivers statistically significant CVR lifts across all weather segments
-                — with the largest gains (+348%) exactly where user willingness-to-pay is highest:
-                extreme weather moments. Recommend full rollout with phased activation: severe/extreme
-                segments first, then moderate/mild after 30-day retention data confirms paywall quality
-                isn&apos;t degraded.
+                Roll out StormGate to severe/extreme segments first (weeks 1–4), then expand to moderate after 30-day retention data confirms that weather-triggered subscribers don&apos;t churn faster than organic ones. Kill switch ready if dismissal rate increases.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                {["No harm to free users", "Severity-gated activation", "High statistical confidence", "+$2.3M projected ARR"].map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-300 border border-green-500/20"
-                  >
+                {["No harm to clear-weather UX", "Severity-gated rollout", "Statistically significant result", "Guard rails in place"].map((tag) => (
+                  <span key={tag} className="px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-300 border border-green-500/20">
                     ✓ {tag}
                   </span>
                 ))}
@@ -516,16 +201,22 @@ export default function ExperimentPage() {
           </div>
         </div>
 
-        {/* Caveat note */}
-        <div className="mt-6 flex items-start gap-2 text-slate-500 text-xs">
-          <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
-          <span>
-            Simulated experiment data for portfolio demonstration. CVR figures and revenue projections are
-            illustrative, calibrated against published industry benchmarks for consumer subscription products
-            (Amplitude, Reforge, 2024).
-          </span>
-        </div>
       </div>
+    </div>
+  );
+}
+
+function BigStat({ label, value, sub, color, icon: Icon }: { label: string; value: string; sub: string; color: string; icon: React.ElementType }) {
+  return (
+    <div className="glass rounded-2xl p-5">
+      <div className="flex items-center gap-2 mb-3">
+        <div className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ background: `${color}15`, border: `1px solid ${color}30` }}>
+          <Icon className="h-3.5 w-3.5" style={{ color }} />
+        </div>
+        <span className="text-slate-500 text-xs">{label}</span>
+      </div>
+      <div className="text-3xl font-bold text-white">{value}</div>
+      <div className="text-xs mt-1 text-slate-500">{sub}</div>
     </div>
   );
 }

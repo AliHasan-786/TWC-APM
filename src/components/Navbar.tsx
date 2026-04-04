@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { Cloud, FlaskConical, Layers, BookOpen } from "lucide-react";
 
 const navLinks = [
-  { href: "/", label: "Weather Demo", icon: Cloud },
-  { href: "/experiment", label: "Experiment Simulator", icon: FlaskConical },
-  { href: "/architecture", label: "Architecture", icon: Layers },
+  { href: "/", label: "Demo", icon: Cloud },
   { href: "/case-study", label: "Case Study", icon: BookOpen },
+  { href: "/experiment", label: "Experiment", icon: FlaskConical },
+  { href: "/architecture", label: "Architecture", icon: Layers },
 ];
 
 export default function Navbar() {
