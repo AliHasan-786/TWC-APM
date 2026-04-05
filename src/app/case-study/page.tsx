@@ -12,6 +12,7 @@ import {
   Users,
   DollarSign,
   X,
+  Brain,
 } from "lucide-react";
 
 export default function CaseStudyPage() {
@@ -35,23 +36,23 @@ export default function CaseStudyPage() {
           </div>
           <h1 className="text-3xl font-bold text-white mb-3 leading-tight">
             The Weather Moment Score:<br />
-            <span className="text-slate-400 font-normal">A Growth Framework for TWC&apos;s Web Consumer Platform</span>
+            <span className="text-slate-300 font-normal">A Growth Framework for TWC&apos;s Web Consumer Platform</span>
           </h1>
-          <p className="text-slate-400 leading-relaxed max-w-2xl">
-            An analysis of how weather data signals can unlock three distinct revenue levers on weather.com — 
+          <p className="text-slate-300 leading-relaxed max-w-2xl">
+            An analysis of how weather data signals can unlock three distinct revenue levers on weather.com. 
             and a structured approach to experimenting across all three without destroying the advertising 
             model that generates TWC&apos;s primary revenue.
           </p>
           <div className="flex flex-wrap gap-2 mt-4">
             {["Growth Experimentation", "A/B Testing", "Advertising Model", "Premium Subscriptions", "Contextual Signals"].map((tag) => (
-              <span key={tag} className="px-2.5 py-1 rounded-full bg-white/5 border border-white/8 text-slate-400 text-xs">
+              <span key={tag} className="px-2.5 py-1 rounded-full bg-white/5 border border-white/8 text-slate-300 text-xs">
                 {tag}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Exec Summary — the PM bet in 4 sentences */}
+        {/* Exec Summary. The PM bet in 4 sentences */}
         <div
           className={`glass rounded-2xl p-6 mb-6 border border-blue-500/20 transition-all duration-700 delay-100 ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
           style={{ background: "rgba(0, 73, 144, 0.08)" }}
@@ -61,31 +62,29 @@ export default function CaseStudyPage() {
               <Target className="h-3.5 w-3.5 text-blue-400" />
             </div>
             <span className="text-sm font-semibold text-blue-300">Executive Summary</span>
-            <span className="ml-auto text-xs text-slate-600">The bet in 4 sentences</span>
+            <span className="ml-auto text-xs text-slate-300">The bet in 4 sentences</span>
           </div>
           <div className="space-y-3 text-sm leading-relaxed">
             <p className="text-slate-300">
-              <strong className="text-white">The opportunity:</strong> weather.com&apos;s 360M MAU generate enormous advertising inventory — 
+              <strong className="text-white">The opportunity:</strong> weather.com&apos;s 360M Monthly Active Users generate enormous advertising inventory. 
               but every session is currently treated identically at the growth layer, regardless of whether the user 
               is casually checking tomorrow&apos;s forecast or actively tracking a hurricane approaching their home.
             </p>
             <p className="text-slate-300">
               <strong className="text-white">The insight:</strong> Weather conditions are a real-time signal of user intent and emotional 
               state that no advertising platform currently exploits. A user in an active storm has 3–5× higher session 
-              dwell time, 4× higher alert opt-in rate, and meaningfully higher willingness-to-pay for premium features — 
+              dwell time, 4× higher alert opt-in rate, and meaningfully higher willingness-to-pay for premium features. 
               but only for minutes, not days.
             </p>
             <p className="text-slate-300">
-              <strong className="text-white">The framework:</strong> A <strong className="text-blue-300">Weather Moment Score (WMS)</strong> — 
-              a composite signal combining WMO severity code, predicted session dwell trajectory, and geographic exposure 
-              rate — routes each session to the growth lever (advertising format, engagement, or premium) that maximizes 
-              revenue per visit without creating inter-lever conflicts.
+              <strong className="text-white">The framework:</strong> A <strong className="text-blue-300">Weather Moment Score (WMS)</strong>. 
+              This score looks at how severe the weather is, how long the user is staying on the page, and how many people are affected. 
+              It uses this score to intelligently show the user the right feature (an ad, an alert sign-up, or a paywall) to make the most money without annoying them.
             </p>
-            <p className="text-slate-400">
-              <strong className="text-slate-300">The constraint acknowledged:</strong> Subscription conversions and advertising impressions 
-              can conflict. This framework is explicitly designed to complement TWC&apos;s ad-first model — not replace it. 
-              EXP-C (premium upsell) is only activated at WMS ≥ 65, where the estimated subscription LTV exceeds the CPM 
-              value of an incremental ad impression.
+            <p className="text-slate-300">
+              <strong className="text-slate-300">The constraint acknowledged:</strong> More paywalls can mean fewer ad views, which hurts revenue. 
+              This strategy protects TWC&apos;s core advertising business. We only show the premium paywall when the weather is severe enough 
+              that the chance of someone buying a subscription is worth more than the money we&apos;d make simply showing them another ad.
             </p>
           </div>
         </div>
@@ -103,38 +102,39 @@ export default function CaseStudyPage() {
           title="A context-blind growth surface"
         >
           <div className="space-y-4">
-            <p className="text-slate-400 text-sm leading-relaxed">
+            <p className="text-slate-300 text-sm leading-relaxed">
               weather.com serves weather data to ~360M monthly users. The growth team&apos;s mandate is to increase 
-              revenue per visit (RPV) — the primary metric that captures both ad quality and premium conversion 
+              revenue per visit (Revenue Per Visit). The primary metric that captures both ad quality and premium conversion 
               in a single measurement.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <StatBox label="Monthly Active Users" value="360M" color="#3b82f6" sub="weather.com + wunderground.com" />
-              <StatBox label="Primary Revenue" value="Advertising" color="#f59e0b" sub="CPM-based, weather-contextual" />
-              <StatBox label="Data Accuracy" value="4× better" color="#10b981" sub="vs. competitors globally" />
+              <StatBox label="Primary Revenue" value="Advertising" color="#f59e0b" sub="Cost Per Thousand Impressions (CPM)-based, weather-contextual" />
+              <StatBox label="Data Accuracy" value="4× better" color="#10b981" sub="vs. Competitors globally" />
             </div>
-            <p className="text-slate-400 text-sm leading-relaxed">
+            <p className="text-slate-300 text-sm leading-relaxed">
               The current growth surface treats all sessions equally: the same paywall prompt, the same ad density, 
-              the same push notification ask — regardless of whether you&apos;re idly scrolling on a sunny Tuesday 
+              the same push notification ask, regardless of whether you&apos;re idly scrolling on a sunny Tuesday 
               or frantically refreshing during a tornado warning. This is a significant missed signal.
             </p>
             <div className="glass rounded-xl p-4 border border-amber-500/15">
-              <div className="text-xs font-semibold text-amber-400 mb-2">The Missed Signal</div>
-              <div className="grid grid-cols-2 gap-3 text-xs text-slate-400">
+              <div className="text-xs font-semibold text-amber-400 mb-1">The Missed Signal</div>
+              <div className="text-[10px] text-slate-300 italic mb-3">Note: Conversion and session figures are PM hypotheses modeled from industry benchmarks (e.g., Amplitude, Reforge), not actual TWC internal data.</div>
+              <div className="grid grid-cols-2 gap-3 text-xs text-slate-300">
                 <div>
                   <div className="text-slate-300 font-medium mb-1">Low-severity session (WMS &lt; 35)</div>
-                  <ul className="space-y-1 text-slate-500">
+                  <ul className="space-y-1 text-slate-300">
                     <li>• Avg session: 45 seconds</li>
-                    <li>• Paywall CVR: 0.3–0.8%</li>
+                    <li>• Paywall Conversion Rate: 0.3–0.8%</li>
                     <li>• Push opt-in: ~4%</li>
                     <li>• Best lever: ad format quality</li>
                   </ul>
                 </div>
                 <div>
                   <div className="text-slate-300 font-medium mb-1">High-severity session (WMS ≥ 65)</div>
-                  <ul className="space-y-1 text-slate-500">
+                  <ul className="space-y-1 text-slate-300">
                     <li>• Avg session: 4–7 minutes</li>
-                    <li>• Paywall CVR: 2–4% (estimated)</li>
+                    <li>• Paywall Conversion Rate: 2–4% (estimated)</li>
                     <li>• Push opt-in: ~18%</li>
                     <li>• Best lever: contextual upsell</li>
                   </ul>
@@ -157,9 +157,8 @@ export default function CaseStudyPage() {
           title="Weather Moment Score (WMS)"
         >
           <div className="space-y-4">
-            <p className="text-slate-400 text-sm leading-relaxed">
-              WMS is a session-level composite signal — not a user-level model. It&apos;s intentionally stateless 
-              (no PII required) and computable at the edge in under 5ms, making it compatible with TWC&apos;s 
+            <p className="text-slate-300 text-sm leading-relaxed">
+              WMS is a session-level composite signal, not a user-level model. It uses anonymous, privacy-compliant first-party cookies for session stickiness to track A/B testing downstream conversions, requiring zero PII. This constraint ensures compatibility with TWC&apos;s 
               privacy-forward infrastructure and the open web.
             </p>
 
@@ -172,26 +171,26 @@ export default function CaseStudyPage() {
               <div className="grid grid-cols-3 gap-3 text-[11px]">
                 <div>
                   <div className="text-slate-300 font-semibold mb-1">Severity Index (55%)</div>
-                  <div className="text-slate-500">WMO code → 5-level classification: clear→mild→moderate→severe→extreme</div>
+                  <div className="text-slate-300">WMO code → 5-level classification: clear→mild→moderate→severe→extreme</div>
                 </div>
                 <div>
                   <div className="text-slate-300 font-semibold mb-1">Dwell Trajectory (25%)</div>
-                  <div className="text-slate-500">Page-load frequency in session. Rapid refreshes signal active monitoring behavior.</div>
+                  <div className="text-slate-300">Page-load frequency in session. Rapid refreshes signal active monitoring behavior.</div>
                 </div>
                 <div>
                   <div className="text-slate-300 font-semibold mb-1">Geo Exposure Rate (20%)</div>
-                  <div className="text-slate-500">% of local population under the same conditions. High = community-level event = amplified intent.</div>
+                  <div className="text-slate-300">% of local population under the same conditions. High = community-level event = amplified intent.</div>
                 </div>
               </div>
             </div>
 
             {/* WMS → lever routing */}
             <div className="space-y-2">
-              <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">WMS → Growth Lever Routing</div>
+              <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider">WMS → Growth Lever Routing</div>
               {[
                 { range: "0–34", label: "Low WMS", lever: "EXP-A: Optimize ad format for impression quality", bg: "#3b82f6", logic: "Subscription friction creates churn risk greater than conversion upside at this WMS." },
                 { range: "35–64", label: "Mid WMS", lever: "EXP-B: Contextual push notification opt-in", bg: "#10b981", logic: "Convert current engagement into a return visit. Each daily user = ~12 more ad impressions." },
-                { range: "65–100", label: "High WMS", lever: "EXP-C: Severity-gated premium upsell", bg: "#8b5cf6", logic: "Session value peaks. User&apos;s need for advanced data exceeds the marginal CPM of one more ad." },
+                { range: "65–100", label: "High WMS", lever: "EXP-C: Severity-gated premium upsell", bg: "#8b5cf6", logic: "Session value peaks. User&apos;s need for advanced data exceeds the marginal Cost Per Thousand Impressions (CPM) of one more ad." },
               ].map((row) => (
                 <div key={row.range} className="glass rounded-xl p-3 flex items-start gap-3 border border-white/6">
                   <div
@@ -202,22 +201,22 @@ export default function CaseStudyPage() {
                   </div>
                   <div className="flex-1">
                     <div className="text-xs font-semibold text-white mb-0.5">{row.lever}</div>
-                    <div className="text-xs text-slate-500">{row.logic}</div>
+                    <div className="text-xs text-slate-300">{row.logic}</div>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Hypothesis formation — this is the JD's "partner with data scientist" signal */}
+            {/* Hypothesis formation. This is the JD's "partner with data scientist" signal */}
             <div className="glass rounded-xl p-4 border border-blue-500/12">
-              <div className="text-xs font-semibold text-blue-400 mb-3">Hypothesis Formation — PM × Data Scientist Collaboration</div>
+              <div className="text-xs font-semibold text-blue-400 mb-3">Hypothesis Formation. PM × Data Scientist Collaboration</div>
               <div className="space-y-2">
                 <HypothesisStep
                   num="01"
                   role="PM"
                   roleColor="#3b82f6"
                   title="Identify the behavioral signal"
-                  body="Observation: Users in high-severity sessions exhibit qualitatively different behavior — multi-tab refreshing, direct map access, longer time-on-page. Hypothesis: This behavioral shift correlates with elevated purchase intent."
+                  body="Observation: Users in High-severity sessions exhibit qualitatively different behavior. Multi-tab refreshing, direct map access, longer time-on-page. Hypothesis: This behavioral shift correlates with elevated purchase intent."
                 />
                 <HypothesisStep
                   num="02"
@@ -231,7 +230,7 @@ export default function CaseStudyPage() {
                   role="PM + DS"
                   roleColor="#8b5cf6"
                   title="Define thresholds and guardrails"
-                  body="Joint decision: WMS ≥ 65 (roughly WMO code ≥ 61 + wind ≥ 35 mph) chosen as activation threshold. Guardrail: paywall dismissal rate must not exceed +5pp above baseline — exceeding this indicates friction overwhelming intent signal."
+                  body="Joint decision: WMS ≥ 65 (roughly WMO code ≥ 61 + wind ≥ 35 mph) chosen as activation threshold. Guardrail: paywall dismissal rate must not exceed +5 percentage points above baseline. Exceeding this indicates friction overwhelming intent signal."
                 />
                 <HypothesisStep
                   num="04"
@@ -258,8 +257,8 @@ export default function CaseStudyPage() {
           title="Testing all three revenue levers"
         >
           <div className="space-y-4">
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Rather than a single A/B test, this framework proposes three sequential experiments — each targeting 
+            <p className="text-slate-300 text-sm leading-relaxed">
+              Rather than a single A/B test, this framework proposes three sequential experiments, each targeting 
               a different revenue lever. They are designed to run non-overlapping user cohorts to prevent 
               interference effects.
             </p>
@@ -268,10 +267,10 @@ export default function CaseStudyPage() {
               icon={TrendingUp}
               color="#3b82f6"
               title="EXP-A: Weather-triggered ad format switching"
-              hypothesis="During high-severity weather sessions, switching from banner to interstitial ad format will increase revenue per visit by ≥8% without increasing bounce rate."
-              metric="Primary: RPV · Guardrail: Bounce rate (must not increase >3pp)"
+              hypothesis="During High-severity weather sessions, switching from standard banner to large sticky banner or in-feed native video formats will increase revenue per visit by ≥8%. (Note: Interstitials are explicitly banned during active weather events due to user safety concerns)."
+              metric="Primary: Revenue Per Visit · Guardrail: Bounce rate (must not increase >3pp)"
               status="proposed"
-              rationale="Ad revenue is TWC's primary income stream. Optimizing format for peak engagement sessions is the lowest-risk, highest-leverage starting point — no new product surface required."
+              rationale="Ad revenue is TWC's primary income stream. Optimizing format for peak engagement sessions is the lowest-risk, highest-leverage starting point, no new product surface required."
               scale="~18M US users exposed in 72 hrs at 50% rollout"
             />
             <ExperimentCard
@@ -291,9 +290,9 @@ export default function CaseStudyPage() {
               color="#8b5cf6"
               title="EXP-C: Severity-gated contextual premium upsell"
               hypothesis="For WMS ≥ 65 sessions: contextual copy naming the user's exact conditions will increase free trial start rate by ≥1.5pp vs. generic control at 95% significance, within 14 days."
-              metric="Primary: Free trial CVR · Secondary: 30-day trial retention · Guardrail: Ad session revenue impact ≤3%"
+              metric="Primary: Free trial Conversion Rate · Secondary: 30-day trial retention · Guardrail: Ad session revenue impact ≤3%"
               status="active"
-              rationale="Only runs at high WMS where estimated subscription LTV > CPM value of the forgone ad impression. Designed as an insurance policy for ad model, not a replacement."
+              rationale="Only runs at high WMS where estimated subscription Lifetime Value > Cost Per Thousand Impressions (CPM) value of the forgone ad impression. Designed as an insurance policy for ad model, not a replacement."
               scale="~7.5M users at WMS ≥ 65 in 72 hrs at 50% rollout"
               isActive
             />
@@ -313,22 +312,61 @@ export default function CaseStudyPage() {
           title="What I explicitly would not build (and why)"
         >
           <div className="space-y-3">
-            <p className="text-slate-400 text-sm leading-relaxed">
-              The strongest PM signal isn&apos;t knowing what to build — it&apos;s knowing what to cut. 
+            <p className="text-slate-300 text-sm leading-relaxed">
+              The strongest PM signal isn&apos;t knowing what to build. It&apos;s knowing what to cut. 
               Three deprioritizations that were tempting but wrong for this context:
             </p>
             <NotBuildCard
               title="Aggressive paywall frequency increase"
-              reason="The obvious move for a PM told to 'grow subscription revenue' — but wrong. At TWC's scale, a 10% paywall frequency increase creates millions of friction events. Without high WMS gating, conversion rates stay low and user trust erodes faster than LTV accumulates. Short-term CVR lift, long-term engagement decline."
+              reason="The obvious move for a PM told to 'grow subscription revenue'. But wrong. At TWC's scale, a 10% paywall frequency increase creates millions of friction events. Without high WMS gating, conversion rates stay low and user trust erodes faster than Lifetime Value accumulates. Short-term Conversion Rate lift, long-term engagement decline."
             />
             <NotBuildCard
               title="App-download conversion as a growth surface"
-              reason="A separate team's mandate. Optimizing app downloads on web surfaces creates misaligned incentives — web RPV drops when users migrate to the app, even if the app generates more revenue. The Web Consumer Platform team's mandate is clear: grow web RPV. Stay in the lane."
+              reason="A separate team's mandate. Optimizing app downloads on web surfaces creates misaligned incentives. Web Revenue Per Visit drops when users migrate to the app, even if the app generates more revenue. The Web Consumer Platform team's mandate is clear: grow web Revenue Per Visit. Stay in the lane."
             />
             <NotBuildCard
               title="ML-based personalization model (v1)"
-              reason="Tempting given TWC's data moat, but premature. A rule-based WMS classifier using existing WMO codes and session signals gets us 80% of the impact at 10% of the data infrastructure cost. Build the experimentation results first — then train a model on them. Rule-based → data collection → ML is the right sequence."
+              reason="Tempting given TWC's data moat, but premature. A rule-based WMS classifier using existing WMO codes and session signals gets us 80% of the impact at 10% of the data infrastructure cost. Build the experimentation results first, then train a model on them. Rule-based → data collection → ML is the right sequence."
             />
+          </div>
+        </SectionCard>
+
+        {/* AI Strategy & Tradeoffs */}
+        <SectionCard
+          id="ai-strategy"
+          open={openSection}
+          toggle={setOpenSection}
+          delay="delay-325"
+          animateIn={animateIn}
+          icon={Brain}
+          iconColor="#f59e0b"
+          label="Implementation Strategy"
+          title="AI integration and engineering tradeoffs"
+        >
+          <div className="space-y-4">
+            <p className="text-slate-300 text-sm leading-relaxed">
+              To maximize the Conversion Rate of EXP-C (the severity-gated premium upsell), the paywall copy needs to be hyper-contextual to the user's exact severe weather situation. This requires a balanced approach to AI integration.
+            </p>
+            
+            <div className="glass rounded-xl p-4 border border-amber-500/20">
+              <div className="flex items-center gap-2 mb-3">
+                <Brain className="h-4 w-4 text-amber-400" />
+                <h3 className="text-white font-semibold text-sm">LLM vs. Rule-Based Fallback</h3>
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  <strong className="text-white">The Ideal State (LLM):</strong> Using an AI model (like Claude Haiku) generates highly contextual, empathetic copy dynamically (e.g., "Heavy rain approaching your area. View the 2-hour radar to stay dry"). It maximizes relevance and conversion.
+                </p>
+                <div className="h-px w-full bg-white/10" />
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  <strong className="text-white">The PM Tradeoff (Latency vs. Lift):</strong> At 360M Monthly Active Users, invoking an LLM for every high-WMS session introduces unacceptable latency (300ms+) and points of failure. The tradeoff decision: We <strong className="text-amber-400">never block the render</strong> waiting for AI.
+                </p>
+                <div className="h-px w-full bg-white/10" />
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  <strong className="text-white">The Fallback Architecture:</strong> The application defaults synchronously to a lightning-fast, hardcoded rule-based template based strictly on the WMO severity code. The LLM is fetched asynchronously in parallel. If the LLM exceeds a strict 150ms timeout or fails, the user sees the rule-based copy. We achieve the personalization lift of AI without sacrificing the 99.99% uptime requirement of an enterprise weather platform.
+                </p>
+              </div>
+            </div>
           </div>
         </SectionCard>
 
@@ -345,7 +383,7 @@ export default function CaseStudyPage() {
           title="Conservative ROI estimate"
         >
           <div className="space-y-4">
-            <p className="text-xs text-slate-500 italic">
+            <p className="text-xs text-slate-300 italic">
               All figures are illustrative estimates for PM portfolio purposes. Not based on TWC internal data.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -353,7 +391,7 @@ export default function CaseStudyPage() {
                 exp="EXP-A"
                 lever="Ad Format"
                 color="#3b82f6"
-                assumption="50M US users/month. 30% in moderate+ conditions. +8% RPV on affected sessions."
+                assumption="50M US users/month. 30% in moderate+ conditions. +8% Revenue Per Visit on affected sessions."
                 estimate="+$3–6M ARR incremental ad revenue"
                 risk="Low"
               />
@@ -369,7 +407,7 @@ export default function CaseStudyPage() {
                 exp="EXP-C"
                 lever="Premium"
                 color="#8b5cf6"
-                assumption="7.5M high-WMS sessions in 72 hrs. 1.5pp CVR lift. $5/mo avg. 40% trial-to-paid."
+                assumption="7.5M high-WMS sessions in 72 hrs. 1.5pp Conversion Rate lift. $5/mo avg. 40% trial-to-paid."
                 estimate="+$2–4M ARR new subscription revenue"
                 risk="Med"
               />
@@ -377,7 +415,7 @@ export default function CaseStudyPage() {
             <div className="glass rounded-xl p-3 border border-green-500/15">
               <div className="text-xs text-green-400 font-semibold mb-1">Bottom-Up: Combined Three-Lever Opportunity</div>
               <div className="text-white font-bold text-lg">$13–25M ARR incremental</div>
-              <div className="text-slate-500 text-xs mt-0.5">Conservative. Assumes no cannibalization between levers (WMS routing logic prevents this). Assumes no change to ad CPM baseline.</div>
+              <div className="text-slate-300 text-xs mt-0.5">Conservative. Assumes no cannibalization between levers (WMS routing logic prevents this). Assumes no change to ad Cost Per Thousand Impressions (CPM) baseline.</div>
             </div>
           </div>
         </SectionCard>
@@ -395,26 +433,30 @@ export default function CaseStudyPage() {
           title="Day 1 priorities and honest gaps"
         >
           <div className="space-y-3">
-            <p className="text-slate-400 text-sm leading-relaxed">
+            <p className="text-slate-300 text-sm leading-relaxed">
               Portfolio projects are hypotheses about product thinking. Here&apos;s what I&apos;d do if this became a real work project, 
               and where this analysis has genuine gaps I haven&apos;t resolved.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <ReflectionCard
                 title="First 30 days"
-                body="Shadow the web data scientist to understand which session signals are actually instrumented — my WMS formula assumes dwell trajectory is trackable, and that assumption needs to be validated against real analytics infrastructure."
+                body="Shadow the web data scientist to understand which session signals are actually instrumented. My WMS formula assumes dwell trajectory is trackable, and that assumption needs to be validated against real analytics infrastructure."
               />
               <ReflectionCard
                 title="The qualitative gap"
-                body="WMS is a quantitative construct. I'd want 10+ user interviews from people who checked weather during a severe event — to understand what they actually wanted that they didn't get — before running EXP-C at scale."
+                body="WMS is a quantitative construct. I'd want 10+ user interviews from people who checked weather during a severe event, to understand what they actually wanted that they didn't get, before running EXP-C at scale."
               />
               <ReflectionCard
                 title="EXP-A is the real starting point"
-                body="Start with ad format switching — lowest risk, doesn't require a new product surface, and builds the experimentation infrastructure that EXP-B and EXP-C will depend on. Don't start with a paywall."
+                body="Start with ad format switching. Lowest risk, doesn't require a new product surface, and builds the experimentation infrastructure that EXP-B and EXP-C will depend on. Don't start with a paywall."
               />
               <ReflectionCard
                 title="The privacy constraint"
-                body="WMS is stateless by design — computed fresh per session. But session frequency tracking raises questions about browser fingerprinting and cross-session state. This needs a legal/privacy review before implementation."
+                body="WMS uses anonymous first-party cookies for session stickiness. But session frequency tracking still raises questions about browser fingerprinting constraints. This needs a legal/privacy review before implementation."
+              />
+              <ReflectionCard
+                title="Cross-Functional Alignment (GTM)"
+                body="Bring in Legal/Privacy early to review cookie compliance for A/B tracking, and align with Product Marketing so the premium paywall copy matches TWC's brand voice. Growth PMs don't ship in a vacuum."
               />
             </div>
           </div>
@@ -472,7 +514,7 @@ function SectionCard({
           <div className="text-white font-semibold leading-tight">{title}</div>
         </div>
         <ChevronRight
-          className={`h-4 w-4 text-slate-500 transition-transform ${isOpen ? "rotate-90" : ""}`}
+          className={`h-4 w-4 text-slate-300 transition-transform ${isOpen ? "rotate-90" : ""}`}
         />
       </button>
       {isOpen && <div className="px-5 pb-5">{children}</div>}
@@ -483,9 +525,9 @@ function SectionCard({
 function StatBox({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
   return (
     <div className="glass rounded-xl p-3 border border-white/5">
-      <div className="text-xs text-slate-500 mb-1">{label}</div>
+      <div className="text-xs text-slate-300 mb-1">{label}</div>
       <div className="text-xl font-bold" style={{ color }}>{value}</div>
-      <div className="text-[10px] text-slate-600 mt-0.5">{sub}</div>
+      <div className="text-[10px] text-slate-300 mt-0.5">{sub}</div>
     </div>
   );
 }
@@ -517,16 +559,16 @@ function ExperimentCard({
       </div>
       <div className="space-y-2 text-xs">
         <div>
-          <span className="text-slate-500 font-semibold uppercase tracking-wide text-[10px]">Hypothesis: </span>
-          <span className="text-slate-400">{hypothesis}</span>
+          <span className="text-slate-300 font-semibold uppercase tracking-wide text-[10px]">Hypothesis: </span>
+          <span className="text-slate-300">{hypothesis}</span>
         </div>
         <div>
-          <span className="text-slate-500 font-semibold uppercase tracking-wide text-[10px]">Metrics: </span>
-          <span className="text-slate-400">{metric}</span>
+          <span className="text-slate-300 font-semibold uppercase tracking-wide text-[10px]">Metrics: </span>
+          <span className="text-slate-300">{metric}</span>
         </div>
         <div>
-          <span className="text-slate-500 font-semibold uppercase tracking-wide text-[10px]">Rationale: </span>
-          <span className="text-slate-400">{rationale}</span>
+          <span className="text-slate-300 font-semibold uppercase tracking-wide text-[10px]">Rationale: </span>
+          <span className="text-slate-300">{rationale}</span>
         </div>
         <div className="flex items-center gap-2 pt-1">
           <span className="px-2 py-0.5 rounded-full text-[9px] font-bold" style={{ color, background: `${color}12`, border: `1px solid ${color}25` }}>
@@ -545,7 +587,7 @@ function NotBuildCard({ title, reason }: { title: string; reason: string }) {
         <span className="text-red-400 text-xs font-bold mt-0.5 flex-shrink-0">✕</span>
         <div className="text-sm font-semibold text-white">{title}</div>
       </div>
-      <p className="text-slate-500 text-xs leading-relaxed pl-4">{reason}</p>
+      <p className="text-slate-300 text-xs leading-relaxed pl-4">{reason}</p>
     </div>
   );
 }
@@ -563,7 +605,7 @@ function ROICard({ exp, lever, color, assumption, estimate, risk }: {
           Risk: {risk}
         </span>
       </div>
-      <div className="text-xs text-slate-500 mb-2 leading-relaxed">{assumption}</div>
+      <div className="text-xs text-slate-300 mb-2 leading-relaxed">{assumption}</div>
       <div className="text-sm font-bold" style={{ color }}>{estimate}</div>
     </div>
   );
@@ -573,7 +615,7 @@ function ReflectionCard({ title, body }: { title: string; body: string }) {
   return (
     <div className="glass rounded-xl p-4 border border-white/6">
       <div className="text-sm font-semibold text-slate-200 mb-2">{title}</div>
-      <p className="text-slate-500 text-xs leading-relaxed">{body}</p>
+      <p className="text-slate-300 text-xs leading-relaxed">{body}</p>
     </div>
   );
 }
@@ -599,7 +641,7 @@ function HypothesisStep({ num, role, roleColor, title, body }: {
       </div>
       <div>
         <div className="text-sm font-semibold text-white mb-1">{title}</div>
-        <div className="text-xs text-slate-400 leading-relaxed">{body}</div>
+        <div className="text-xs text-slate-300 leading-relaxed">{body}</div>
       </div>
     </div>
   );

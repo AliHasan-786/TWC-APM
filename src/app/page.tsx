@@ -13,15 +13,15 @@ const DEMO_LOCATIONS = [
     lon: -80.1918,
     emoji: "🌀",
     scenario: "Hurricane Season",
-    scenarioDetail: "High-severity sessions: user dwell time +340%, highest willingness-to-pay window of the year.",
+    scenarioDetail: "Hurricanes dramatically increase how much time people spend on the site, making it the best time to safely offer a premium upgrade.",
   },
   {
     name: "Oklahoma City, OK",
     lat: 35.4676,
     lon: -97.5164,
     emoji: "⛈️",
-    scenario: "Tornado Alley",
-    scenarioDetail: "Rotating supercells drive extreme session depth. Users check radar 8–12x before making safety decisions.",
+    scenario: "Tornado Alley (Simulated Analog)",
+    scenarioDetail: "Severe storms make people check the radar much more often and stay on the page longer. (Note: The score is based on live data. If it is sunny in OKC right now, the score will look low.)",
   },
   {
     name: "New York, NY",
@@ -29,7 +29,7 @@ const DEMO_LOCATIONS = [
     lon: -74.006,
     emoji: "🌤️",
     scenario: "Nor'easter Watch",
-    scenarioDetail: "Storm event approaches — commuter behavior shifts from passive to active weather consumption.",
+    scenarioDetail: "When a major storm approaches, commuters suddenly pay close attention to the forecast instead of just quickly checking the temperature.",
   },
   {
     name: "Seattle, WA",
@@ -37,7 +37,7 @@ const DEMO_LOCATIONS = [
     lon: -122.3321,
     emoji: "🌧️",
     scenario: "Pacific Rain",
-    scenarioDetail: "Sustained moderate conditions: engagement lever (return visit) outperforms premium upsell here.",
+    scenarioDetail: "Consistent rainy days. Pushing people to sign up for daily alerts works much better here than asking them to pay for a premium subscription.",
   },
   {
     name: "Los Angeles, CA",
@@ -45,11 +45,11 @@ const DEMO_LOCATIONS = [
     lon: -118.2437,
     emoji: "☀️",
     scenario: "Clear Conditions",
-    scenarioDetail: "Low Weather Moment Score — advertising impression quality matters more than conversion rate right now.",
+    scenarioDetail: "Clear, quiet weather. People aren't likely to buy a subscription right now, so it's better to just show them standard ads without interrupting their experience.",
   },
 ];
 
-// The three growth levers — TWC's actual revenue model
+// The three growth levers. TWC's actual revenue model
 const GROWTH_LEVERS = [
   {
     id: "advertising",
@@ -57,11 +57,11 @@ const GROWTH_LEVERS = [
     color: "#3b82f6",
     label: "EXP-A · Advertising",
     title: "Weather-triggered ad format switching",
-    desc: "Hypothesis: During high-severity sessions, user dwell time peaks. Switching from banner → interstitial ad format captures more revenue per session without increasing ad frequency.",
+    desc: "Hypothesis: When severe weather hits, people stay on the page longer. Showing a larger ad during this time makes more money without having to bombard them with more total ads.",
     metric: "Revenue per visit",
     minSeverity: 0, // always relevant
     bestAt: ["severe", "extreme", "moderate"],
-    insight: "Primary lever — TWC's core business",
+    insight: "Primary lever. TWC's core business",
   },
   {
     id: "engagement",
@@ -69,7 +69,7 @@ const GROWTH_LEVERS = [
     color: "#10b981",
     label: "EXP-B · Engagement",
     title: "Contextual push notification opt-in",
-    desc: "Hypothesis: Users actively consuming weather data during active events have 4× higher opt-in rates for push alerts — converting a single session into a daily active user relationship.",
+    desc: "Hypothesis: People actively tracking a storm are 4x more likely to sign up for push alerts. This simple prompt can turn a one-time visitor into a daily user.",
     metric: "Return visit rate",
     minSeverity: 1,
     bestAt: ["mild", "moderate", "severe", "extreme"],
@@ -81,11 +81,11 @@ const GROWTH_LEVERS = [
     color: "#8b5cf6",
     label: "EXP-C · Premium",
     title: "Severity-gated premium upsell",
-    desc: "Hypothesis: Contextual paywall copy that names the user's exact weather conditions converts at 2–4× the rate of a generic 'Unlock Premium' message — but only at high Weather Moment Scores.",
-    metric: "Subscription CVR",
+    desc: "Hypothesis: A paywall that mentions the user's specific local storm (e.g., 'Track the heavy rain') gets 2-4x more people to subscribe than a generic 'Unlock Premium' screen—but only if a severe storm is actually happening.",
+    metric: "Subscription Conversion Rate",
     minSeverity: 2,
     bestAt: ["severe", "extreme"],
-    insight: "Secondary lever — complements ad model",
+    insight: "Secondary lever. Complements ad model",
   },
 ];
 
@@ -156,14 +156,14 @@ export default function HomePage() {
           }}
         >
           <span style={{ color: config.textColor }}>
-            ⚠️ {severity === "extreme" ? "EXTREME" : "SEVERE"} WEATHER — {weather.location} — Weather Moment Score: HIGH
+            ⚠️ {severity === "extreme" ? "EXTREME" : "SEVERE"} WEATHER. {weather.location}. Weather Moment Score: HIGH
           </span>
         </div>
       )}
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
 
-        {/* Page header — leads with the business problem */}
+        {/* Page header. Leads with the business problem */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-xs font-semibold text-blue-400 uppercase tracking-widest">TWC Web Consumer Platform</span>
@@ -172,10 +172,10 @@ export default function HomePage() {
             How do you grow revenue per visit<br className="hidden lg:block" />
             <span className="gradient-text"> for 360M free users</span>?
           </h1>
-          <p className="text-slate-400 text-sm max-w-2xl leading-relaxed">
+          <p className="text-slate-300 text-sm max-w-2xl leading-relaxed">
             weather.com&apos;s primary revenue is advertising. The tension: interventions that drive subscription conversions 
             can reduce ad impression quality. StormGate proposes a{" "}
-            <strong className="text-slate-300">Weather Moment Score</strong> — a signal that routes each session 
+            <strong className="text-slate-300">Weather Moment Score</strong>. A signal that routes each session 
             to the right growth lever at the right moment.
           </p>
         </div>
@@ -187,8 +187,8 @@ export default function HomePage() {
 
             {/* Location selector */}
             <div>
-              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">
-                📍 Switch cities — watch the Weather Moment Score change
+              <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2.5">
+                📍 Switch cities. Watch the Weather Moment Score change
               </div>
               <div className="flex flex-wrap gap-2 mb-3">
                 {DEMO_LOCATIONS.map((loc) => (
@@ -198,7 +198,7 @@ export default function HomePage() {
                     className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all border ${
                       selectedLocation.name === loc.name
                         ? "text-white border-blue-500/50 bg-blue-500/15"
-                        : "text-slate-400 border-white/8 bg-white/3 hover:text-white hover:border-white/15"
+                        : "text-slate-300 border-white/8 bg-white/3 hover:text-white hover:border-white/15"
                     }`}
                   >
                     <span>{loc.emoji}</span>
@@ -212,7 +212,7 @@ export default function HomePage() {
               >
                 <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0" style={{ color: config.textColor }} />
                 <span style={{ color: config.textColor }} className="font-medium">{selectedLocation.scenario}</span>
-                <span className="text-slate-400 text-xs">— {selectedLocation.scenarioDetail}</span>
+                <span className="text-slate-300 text-xs">- {selectedLocation.scenarioDetail}</span>
               </div>
             </div>
 
@@ -233,14 +233,14 @@ export default function HomePage() {
                     <div className="text-5xl leading-none">{getWeatherIcon(weather.weatherCode, weather.isDay)}</div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <MapPin className="h-3 w-3 text-slate-500" />
+                        <MapPin className="h-3 w-3 text-slate-300" />
                         <span className="text-slate-300 text-sm">{weather.location}</span>
                         <span className={`px-2 py-0.5 rounded-full text-xs font-bold border ${config.badgeClass}`}>
                           {config.label}
                         </span>
                       </div>
                       <div className="text-4xl font-light text-white tracking-tight">{weather.temperature}°</div>
-                      <div className="text-slate-400 text-sm mt-0.5">
+                      <div className="text-slate-300 text-sm mt-0.5">
                         {weather.weatherDescription} · Feels {weather.feelsLike}°F
                       </div>
                     </div>
@@ -254,17 +254,17 @@ export default function HomePage() {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-10 text-slate-500">Failed to load weather data.</div>
+              <div className="text-center py-10 text-slate-300">Failed to load weather data.</div>
             )}
 
             {/* Weather Moment Score */}
             <div className="glass rounded-2xl p-5">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">
+                  <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-0.5">
                     Weather Moment Score (WMS)
                   </div>
-                  <div className="text-xs text-slate-600">
+                  <div className="text-xs text-slate-300">
                     Composite: severity index × session dwell modifier × geographic exposure rate
                   </div>
                 </div>
@@ -272,7 +272,7 @@ export default function HomePage() {
                   className="text-3xl font-bold transition-all duration-700"
                   style={{ color: config.color }}
                 >
-                  {loading ? "—" : wmsNormalized}
+                  {loading ? "-" : wmsNormalized}
                 </div>
               </div>
               {/* Score bar */}
@@ -287,7 +287,7 @@ export default function HomePage() {
                 />
               </div>
               {/* Score spectrum labels */}
-              <div className="flex justify-between text-[10px] text-slate-600 mb-4">
+              <div className="flex justify-between text-[10px] text-slate-300 mb-4">
                 <span>0 · Advertise</span>
                 <span>35 · Engage</span>
                 <span>65 · Upsell</span>
@@ -303,12 +303,12 @@ export default function HomePage() {
                   <div className="text-sm font-semibold text-white">
                     {loading ? "Loading..." : wmsNormalized >= 65 ? "Run EXP-C: Premium upsell" : wmsNormalized >= 35 ? "Run EXP-B: Push opt-in" : "Run EXP-A: Ad format switch"}
                   </div>
-                  <div className="text-xs text-slate-400 mt-0.5">
+                  <div className="text-xs text-slate-300 mt-0.5">
                     {loading ? "" : wmsNormalized >= 65 
-                      ? "High-severity session — willingness-to-pay peaks. Contextual paywall is the right intervention." 
+                      ? "High-severity session. Willingness-to-pay peaks. Contextual paywall is the right intervention." 
                       : wmsNormalized >= 35 
-                      ? "Moderate engagement — convert this session into a daily return visit via alert opt-in." 
-                      : "Low WMS — optimize ad format for impression quality. Don't interrupt with subscription friction."}
+                      ? "Moderate engagement. Convert this session into a daily return visit via alert opt-in." 
+                      : "Low WMS. Optimize ad format for impression quality. Don't interrupt with subscription friction."}
                   </div>
                 </div>
               </div>
@@ -317,8 +317,8 @@ export default function HomePage() {
             {/* Hourly forecast */}
             {!loading && weather && (
               <div className="glass rounded-2xl p-4">
-                <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-                  Hourly — {weather.location}
+                <h2 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">
+                  Hourly. {weather.location}
                 </h2>
                 <div className="flex gap-2 overflow-x-auto pb-1">
                   {weather.hourlyForecast.slice(0, 8).map((h, i) => {
@@ -326,7 +326,7 @@ export default function HomePage() {
                     const label = hour === 0 ? "12am" : hour < 12 ? `${hour}am` : hour === 12 ? "12pm" : `${hour - 12}pm`;
                     return (
                       <div key={i} className="flex flex-col items-center gap-1 min-w-[44px] glass rounded-xl p-2">
-                        <span className="text-slate-500 text-[10px]">{label}</span>
+                        <span className="text-slate-300 text-[10px]">{label}</span>
                         <span className="text-base">{getWeatherIcon(h.weatherCode)}</span>
                         <span className="text-white text-xs font-medium">{h.temp}°</span>
                         {h.precipProbability > 20 && (
@@ -345,10 +345,10 @@ export default function HomePage() {
 
             {/* Levers header */}
             <div>
-              <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+              <div className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
                 Three Revenue Levers
               </div>
-              <div className="text-xs text-slate-600 leading-relaxed">
+              <div className="text-xs text-slate-300 leading-relaxed">
                 WMS determines which lever is most relevant right now. Click any to explore the experiment.
               </div>
             </div>
@@ -383,19 +383,19 @@ export default function HomePage() {
                         ACTIVE
                       </span>
                     ) : (
-                      <span className="text-[9px] text-slate-600 font-semibold px-1.5 py-0.5 rounded-full bg-white/5">
+                      <span className="text-[9px] text-slate-300 font-semibold px-1.5 py-0.5 rounded-full bg-white/5">
                         LOW WMS
                       </span>
                     )}
                   </div>
                   <div className="text-white text-sm font-semibold mb-1 leading-snug">{lever.title}</div>
                   {isActive && (
-                    <p className="text-slate-400 text-xs leading-relaxed mt-2 mb-2">
+                    <p className="text-slate-300 text-xs leading-relaxed mt-2 mb-2">
                       {lever.desc}
                     </p>
                   )}
                   <div className="flex items-center justify-between mt-2">
-                    <span className="text-xs text-slate-600">Optimizes: <span className="text-slate-400">{lever.metric}</span></span>
+                    <span className="text-xs text-slate-300">Optimizes: <span className="text-slate-300">{lever.metric}</span></span>
                     {isActive && (
                       <span className="text-xs" style={{ color: lever.color + "cc" }}>{lever.insight}</span>
                     )}
@@ -407,10 +407,10 @@ export default function HomePage() {
             {/* The core tension */}
             <div className="glass rounded-2xl p-4 border border-white/6 mt-2">
               <div className="text-xs font-semibold text-slate-300 mb-2">The Core Tension</div>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 EXP-A (ads) and EXP-C (premium) can conflict: showing a paywall reduces ad impressions in that session. 
-                WMS gates EXP-C to only high-severity sessions where the{" "}
-                <span className="text-slate-400">subscription LTV &gt; ad CPM</span>.
+                WMS gates EXP-C to only High-severity sessions where the{" "}
+                <span className="text-slate-300">subscription Lifetime Value &gt; ad Cost Per Thousand Impressions (CPM)</span>.
               </p>
               <a
                 href="/case-study"
@@ -428,7 +428,7 @@ export default function HomePage() {
               >
                 <div className="text-lg">⚗️</div>
                 <div className="text-xs font-semibold text-white group-hover:text-blue-300 transition-colors">EXP-C Results</div>
-                <div className="text-[10px] text-slate-500">A/B test dashboard</div>
+                <div className="text-[10px] text-slate-300">A/B test dashboard</div>
               </a>
               <a
                 href="/architecture"
@@ -436,7 +436,7 @@ export default function HomePage() {
               >
                 <div className="text-lg">🏗️</div>
                 <div className="text-xs font-semibold text-white group-hover:text-purple-300 transition-colors">The System</div>
-                <div className="text-[10px] text-slate-500">How it&apos;s built</div>
+                <div className="text-[10px] text-slate-300">How it&apos;s built</div>
               </a>
             </div>
 
@@ -450,9 +450,9 @@ export default function HomePage() {
 function MiniStat({ icon: Icon, label, value, highlight }: { icon: React.ElementType; label: string; value: string; highlight?: boolean }) {
   return (
     <div className="glass rounded-xl px-3 py-2 flex items-center gap-2">
-      <Icon className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" />
+      <Icon className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
       <div>
-        <div className="text-[10px] text-slate-600 uppercase tracking-wide">{label}</div>
+        <div className="text-[10px] text-slate-300 uppercase tracking-wide">{label}</div>
         <div className={`text-sm font-medium ${highlight ? "text-green-400" : "text-white"}`}>{value}</div>
       </div>
     </div>

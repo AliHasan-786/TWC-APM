@@ -48,7 +48,7 @@ Respond ONLY with valid JSON (no explanation, no markdown, just the JSON object)
             Authorization: `Bearer ${apiKey}`,
             "Content-Type": "application/json",
             "HTTP-Referer": "https://stormgate.vercel.app",
-            "X-Title": "StormGate — Weather Subscription Engine",
+            "X-Title": "StormGate. Weather Subscription Engine",
           },
           body: JSON.stringify({
             model: "anthropic/claude-haiku-4-5",
